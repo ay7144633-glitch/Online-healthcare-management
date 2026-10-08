@@ -1,0 +1,11 @@
+.patient-history-list { display: grid; gap: 10px; margin-top: 20px; }
+.patient-history-list > article { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: start; gap: 12px; padding: 14px 0; border-top: 1px solid #e4ebe5; }
+.patient-history-entry strong { color: #18332e; font-size: 12px; }
+.patient-history-entry small { display: block; margin-top: 4px; color: #87948d; font-size: 9px; }
+.patient-history-entry p { margin: 9px 0 0; color: #53665d; font-size: 11px; line-height: 1.6; white-space: pre-wrap; }
+.patient-history-list details form { min-width: 220px; margin-top: 9px; padding: 12px; background: #f5f7f4; border: 1px solid #e4ebe5; }
+@media (max-width: 700px) {
+    .patient-history-list > article { grid-template-columns: minmax(0, 1fr) auto; }
+    .patient-history-entry { grid-column: 1 / -1; }
+    .patient-history-list details form { min-width: 0; width: min(290px, calc(100vw - 64px)); }
+}

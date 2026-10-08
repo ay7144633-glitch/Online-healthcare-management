@@ -1,0 +1,24 @@
+.availability-form { align-items: end; gap: 18px 16px; }
+.availability-form > label { align-self: start; }
+.availability-time-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.availability-time-fields label { display: grid; gap: 7px; color: #52665d; font-size: 11px; font-weight: 700; }
+.availability-presets { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.availability-presets-label { margin-right: 4px; color: #718078; font-size: 10px; font-weight: 700; }
+.availability-help { margin: -7px 0 0; color: #7d8b84; font-size: 10px; line-height: 1.5; }
+.appointment-week { display: grid; grid-template-columns: repeat(7, minmax(112px, 1fr)); overflow-x: auto; border-top: 1px solid #e4ebe5; border-bottom: 1px solid #e4ebe5; }
+.appointment-day { min-height: 142px; padding: 12px 10px; border-right: 1px solid #e4ebe5; }
+.appointment-day:last-child { border-right: 0; }
+.appointment-day-heading { display: grid; gap: 3px; padding-bottom: 9px; border-bottom: 1px solid #edf1ee; }
+.appointment-day-heading strong { color: #155f4c; font-size: 10px; text-transform: uppercase; }
+.appointment-day-heading span { color: #7d8b84; font-size: 10px; }
+.appointment-day-empty { margin: 13px 0 0; color: #98a49e; font-size: 10px; }
+.appointment-day-list { display: grid; gap: 7px; padding-top: 9px; }
+.appointment-day-visit { display: grid; gap: 3px; padding: 7px; background: #f3f7f3; border-left: 2px solid #155f4c; }
+.appointment-day-visit > strong { color: #18332e; font-size: 10px; }
+.appointment-day-visit > span { color: #52665d; font-size: 10px; overflow-wrap: anywhere; }
+.appointment-day-visit > small { justify-self: start; font-size: 8px; }
+@media (max-width: 700px) {
+    .availability-time-fields { grid-template-columns: 1fr; gap: 14px; }
+    .availability-presets { gap: 7px; }
+    .availability-presets-label { flex-basis: 100%; }
+}

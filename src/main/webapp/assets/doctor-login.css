@@ -1,0 +1,289 @@
+.doctor-login-body {
+    min-height: 100vh;
+    margin: 0;
+    color: #18332e;
+    background: #f5f7f4;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.doctor-login-header {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(145px, 1fr) auto minmax(190px, 1fr);
+    align-items: center;
+    gap: 24px;
+    min-height: 76px;
+    padding: 0 max(5vw, 28px);
+    background: #fbfcfa;
+    border-bottom: 1px solid #e4ebe5;
+}
+
+.doctor-login-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(17px, 2.4vw, 34px);
+}
+
+.doctor-login-nav a {
+    position: relative;
+    padding: 9px 0;
+    color: #53675e;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.doctor-login-nav a:hover,
+.doctor-login-nav a.is-current {
+    color: #155f4c;
+}
+
+.doctor-login-nav a.is-current::after {
+    position: absolute;
+    right: 0;
+    bottom: 1px;
+    left: 0;
+    height: 2px;
+    background: #e4a584;
+    content: '';
+}
+
+.doctor-login-general-link {
+    justify-self: end;
+    color: #155f4c;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.doctor-login-general-link span {
+    padding-left: 5px;
+    color: #d58d68;
+}
+
+.doctor-login-general-link:hover,
+.doctor-login-switch a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.doctor-login-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+    align-items: center;
+    gap: clamp(36px, 6vw, 76px);
+    width: min(1184px, 100%);
+    min-height: calc(100vh - 76px);
+    margin: 0 auto;
+    padding: 64px 40px 76px;
+}
+
+.doctor-login-intro {
+    padding: clamp(36px, 5vw, 66px);
+    color: #f4f8f4;
+    background: #155f4c;
+    border-radius: 5px;
+}
+
+.doctor-login-intro > .eyebrow {
+    color: #c0d9ca;
+}
+
+.doctor-login-intro > .eyebrow .eyebrow-dot,
+.doctor-login-kicker .eyebrow-dot {
+    background: #e4a584;
+}
+
+.doctor-login-intro h1 {
+    max-width: 490px;
+    margin: 22px 0 18px;
+    font: 700 43px/1.16 'Manrope', sans-serif;
+    letter-spacing: 0;
+}
+
+.doctor-login-intro h1 em {
+    color: #eab395;
+    font-style: normal;
+}
+
+.doctor-login-intro > p {
+    max-width: 430px;
+    margin: 0;
+    color: #c4d9ce;
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.doctor-login-workflows {
+    display: grid;
+    margin-top: 34px;
+    border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.doctor-login-workflows > div {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 52px;
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
+}
+
+.doctor-login-workflows span {
+    color: #eab395;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.doctor-login-workflows strong {
+    color: #f4f8f4;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.doctor-login-panel {
+    width: 100%;
+    max-width: 452px;
+    justify-self: center;
+    padding: clamp(28px, 4vw, 44px);
+    background: #fff;
+    border: 1px solid #e4ebe5;
+    border-radius: 5px;
+    box-shadow: 0 16px 44px rgba(28, 64, 49, .06);
+}
+
+.doctor-login-kicker {
+    color: #155f4c;
+}
+
+.doctor-login-panel h2 {
+    margin: 17px 0 9px;
+    font: 700 27px 'Manrope', sans-serif;
+    letter-spacing: 0;
+}
+
+.doctor-login-description {
+    margin: 0 0 28px;
+    color: #7d8b84;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.doctor-login-form {
+    display: grid;
+    gap: 20px;
+}
+
+.doctor-login-form label {
+    display: grid;
+    gap: 8px;
+    color: #53665d;
+}
+
+.doctor-login-form input {
+    min-height: 44px;
+}
+
+.doctor-login-form .button {
+    min-height: 44px;
+    margin-top: 5px;
+}
+
+.doctor-login-switch {
+    margin: 24px 0 0;
+    color: #78877f;
+    text-align: center;
+    font-size: 11px;
+}
+
+.doctor-login-switch a {
+    color: #155f4c;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    .doctor-login-header {
+        grid-template-columns: 1fr auto;
+        gap: 8px 20px;
+        min-height: 68px;
+        padding: 10px 24px;
+    }
+
+    .doctor-login-nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-content: flex-start;
+        gap: 24px;
+        overflow-x: auto;
+    }
+
+    .doctor-login-general-link {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .doctor-login-main {
+        grid-template-columns: minmax(0, 1fr) minmax(330px, .9fr);
+        gap: 28px;
+        min-height: calc(100vh - 116px);
+        padding: 42px 28px;
+    }
+
+    .doctor-login-intro {
+        padding: 34px 30px;
+    }
+
+    .doctor-login-intro h1 {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 680px) {
+    .doctor-login-header {
+        grid-template-columns: 1fr auto;
+        padding: 10px 18px 0;
+    }
+
+    .doctor-login-nav {
+        gap: 20px;
+        min-height: 42px;
+    }
+
+    .doctor-login-nav a,
+    .doctor-login-general-link {
+        font-size: 10px;
+    }
+
+    .doctor-login-main {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: 0;
+        padding: 24px 18px 36px;
+    }
+
+    .doctor-login-intro {
+        padding: 28px 24px;
+    }
+
+    .doctor-login-intro h1 {
+        margin-top: 17px;
+        font-size: 32px;
+    }
+
+    .doctor-login-workflows {
+        margin-top: 23px;
+    }
+
+    .doctor-login-workflows > div {
+        min-height: 44px;
+    }
+
+    .doctor-login-panel {
+        max-width: none;
+        padding: 27px 23px;
+    }
+}

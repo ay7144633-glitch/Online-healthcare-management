@@ -1,0 +1,32 @@
+package com.healthcare.web;
+
+import java.sql.SQLException;
+
+import com.healthcare.data.Database;
+import com.healthcare.data.UserRepository;
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
+
+@WebListener
+public class DatabaseListener implements ServletContextListener {
+    @Override
+    public void contextInitialized(ServletContextEvent event) {
+        try {
+            Database.initialize();
+            String adminEmail = System.getenv("BOOTSTRAP_ADMIN_EMAIL");
+            String adminPassword = System.getenv("BOOTSTRAP_ADMIN_PASSWORD");
+            if (adminEmail != null && !adminEmail.isBlank() && adminPassword != null && adminPassword.length() >= 8) {
+                UserRepository users = new UserRepository();
+                if (!users.existsByEmail(adminEmail)) {
+                    users.createUser("System Administrator", adminEmail, adminPassword, "ADMIN", null);
+                }
+            }
+            event.getServletContext().log("Healthcare database initialized.");
+        } catch (SQLException | IllegalStateException exception) {
+            event.getServletContext().setAttribute("databaseError", "Database is unavailable. Check MySQL and the DB_* settings.");
+            event.getServletContext().log("Healthcare database initialization failed.", exception);
+        }
+    }
+}

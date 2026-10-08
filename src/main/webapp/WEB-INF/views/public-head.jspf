@@ -1,0 +1,35 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f4">
+    <title><c:out value="${pageTitle}" /></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${ctx}/assets/app.css">
+    <link rel="stylesheet" href="${ctx}/assets/home-enhancements.css">
+    <link rel="stylesheet" href="${ctx}/assets/public-pages.css">
+    <link rel="stylesheet" href="${ctx}/assets/public-content.css">
+</head>
+<body class="home-body">
+<header class="home-nav">
+    <a class="brand" href="${ctx}/" aria-label="Carepoint home"><span class="brand-mark">C</span><span>carepoint</span></a>
+    <div class="home-nav-right">
+        <nav class="home-primary-nav" aria-label="Site navigation">
+            <a href="${ctx}/" class="${currentPage == 'home' ? 'is-current' : ''}">Home</a>
+            <a href="${ctx}/for-patients" class="${currentPage == 'patients' ? 'is-current' : ''}">For patients</a>
+            <a href="${ctx}/for-doctors" class="${currentPage == 'doctors' ? 'is-current' : ''}">For doctors</a>
+            <a href="${ctx}/for-clinics" class="${currentPage == 'clinics' ? 'is-current' : ''}">For clinics</a>
+            <a href="${ctx}/how-it-works" class="${currentPage == 'how-it-works' ? 'is-current' : ''}">How it works</a>
+        </nav>
+        <nav class="home-nav-actions" aria-label="Account">
+            <c:if test="${not empty user}"><a class="home-nav-link" href="${ctx}/dashboard">My workspace</a></c:if>
+            <a class="home-nav-link" href="${ctx}/login">Log in</a>
+            <a class="button button-primary home-nav-cta" href="${ctx}/register">Create account <span aria-hidden="true">&#8594;</span></a>
+        </nav>
+    </div>
+</header>

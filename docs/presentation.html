@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Carepoint | Project Presentation</title>
+    <style>
+        :root { --ink: #17352e; --green: #137b61; --green-dark: #105c49; --green-light: #e8f4ee; --muted: #647871; --line: #dce7e0; --paper: #fff; --coral: #df795f; --coral-light: #fff0eb; --gold: #e3b363; --soft: #f5f7f4; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; color: var(--ink); background: #dfe6e1; font-family: "Segoe UI", Arial, sans-serif; }
+        .slide { position: relative; display: flex; flex-direction: column; width: 13.333in; height: 7.5in; margin: 24px auto; padding: .52in .68in .42in; overflow: hidden; background: var(--paper); page-break-after: always; break-after: page; }
+        .slide:last-child { page-break-after: auto; break-after: auto; }
+        .topline, .footline { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 9pt; }
+        .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); font-weight: 700; }
+        .brand-mark { display: grid; width: 25px; height: 25px; place-items: center; color: white; background: var(--green); border-radius: 8px 8px 8px 2px; font-size: 14pt; font-weight: 800; }
+        .kicker { color: var(--green); font-size: 9pt; font-weight: 700; letter-spacing: 1.2px; }
+        h1, h2, h3, p { margin-top: 0; }
+        h1, h2, h3 { font-family: "Segoe UI", Arial, sans-serif; }
+        h1 { max-width: 760px; margin: 18px 0 13px; font-size: 36pt; line-height: 1.08; letter-spacing: -.6px; }
+        h2 { margin: 12px 0 8px; font-size: 26pt; line-height: 1.12; }
+        h3 { margin-bottom: 7px; font-size: 14pt; }
+        .lead { max-width: 720px; color: var(--muted); font-size: 15pt; line-height: 1.5; }
+        .footline { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-size: 8pt; }
+        .cover { color: white; background: var(--green-dark); }
+        .cover .topline, .cover .footline { color: #c5ddd1; }
+        .cover .brand { color: white; }
+        .cover .brand-mark { color: var(--green-dark); background: #d7eadd; }
+        .cover .kicker { color: #e9b89f; }
+        .cover .lead { color: #d0e1d7; }
+        .cover .footline { border-color: rgba(255,255,255,.22); }
+        .cover-main { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 45px; flex: 1; }
+        .cover h1 em { color: #efb798; font-style: normal; }
+        .cover-art { position: relative; display: grid; min-height: 350px; place-items: center; }
+        .orbit { position: absolute; width: 300px; height: 300px; border: 1px solid rgba(236,248,239,.25); border-radius: 50%; }
+        .orbit::before, .orbit::after { position: absolute; inset: 23px; border: 1px solid rgba(236,248,239,.17); border-radius: 50%; content: ""; }
+        .orbit::after { inset: 55px; border-color: rgba(236,248,239,.14); }
+        .heart-node { position: relative; z-index: 1; display: grid; width: 114px; height: 114px; place-items: center; color: var(--green-dark); background: #e4f0e7; border-radius: 30px 30px 30px 8px; font-size: 42pt; font-weight: 700; }
+        .orbit-tag { position: absolute; z-index: 2; padding: 9px 12px; color: var(--ink); background: #fff; border-radius: 5px; box-shadow: 0 8px 20px rgba(0,0,0,.12); font-size: 9pt; font-weight: 700; }
+        .tag-one { top: 43px; right: 7px; }.tag-two { bottom: 50px; right: 0; }.tag-three { bottom: 70px; left: 7px; }
+        .title-block { margin: 24px 0 20px; }
+        .role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 25px; }
+        .role { min-height: 225px; padding: 19px; border: 1px solid var(--line); border-radius: 7px; }
+        .role-number { display: grid; width: 30px; height: 30px; margin-bottom: 15px; place-items: center; color: var(--green); background: var(--green-light); border-radius: 8px; font-size: 10pt; font-weight: 700; }
+        .role:nth-child(2) .role-number { color: #a95440; background: var(--coral-light); }
+        .role:nth-child(3) .role-number { color: #866124; background: #fff4de; }
+        .role p, .small-copy { color: var(--muted); font-size: 11pt; line-height: 1.55; }
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+        .chip { padding: 6px 8px; color: var(--green-dark); background: var(--green-light); border-radius: 4px; font-size: 8pt; font-weight: 600; }
+        .flow { display: grid; grid-template-columns: repeat(5, 1fr); align-items: stretch; gap: 12px; margin: 34px 0 20px; }
+        .flow-step { position: relative; min-height: 146px; padding: 17px 14px; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; }
+        .flow-step:not(:last-child)::after { position: absolute; top: 50%; right: -12px; z-index: 2; color: var(--coral); content: "→"; font-size: 17pt; font-weight: 700; }
+        .flow-no { color: var(--coral); font-size: 9pt; font-weight: 700; }
+        .flow-step h3 { margin-top: 15px; font-size: 12pt; }
+        .flow-step p { margin-bottom: 0; color: var(--muted); font-size: 9pt; line-height: 1.45; }
+        .callout { display: flex; align-items: center; gap: 11px; margin-top: auto; padding: 12px 14px; color: var(--green-dark); background: var(--green-light); border-left: 3px solid var(--green); font-size: 10pt; }
+        .architecture { display: grid; grid-template-columns: 1fr 55px 1fr 55px 1fr; align-items: center; gap: 8px; margin: 23px 0; }
+        .arch-box { min-height: 150px; padding: 17px; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; }
+        .arch-box.primary { background: var(--green-light); border-color: #c9e1d1; }
+        .arch-box h3 { margin: 8px 0; }
+        .arch-box p { margin: 0; color: var(--muted); font-size: 10pt; line-height: 1.5; }
+        .arch-icon { color: var(--coral); font-size: 23pt; text-align: center; }
+        .tech-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; }
+        .tech { padding: 11px 9px; border-top: 2px solid var(--green); background: #fafcf9; }
+        .tech strong, .tech span { display: block; }
+        .tech strong { margin-bottom: 4px; font-size: 10pt; }
+        .tech span { color: var(--muted); font-size: 8pt; }
+        .schema { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 23px 0; }
+        .table-card { padding: 13px 15px; background: var(--soft); border: 1px solid var(--line); border-radius: 5px; }
+        .table-card h3 { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 11pt; }
+        .table-card h3 span { color: var(--green); font-size: 8pt; }
+        .field { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; color: #4d635a; font-size: 8pt; }
+        .field small { color: #91a098; }
+        .relation { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--green); font-size: 9pt; font-weight: 700; }
+        .relation span { color: var(--coral); }
+        .quality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px 22px; margin-top: 18px; }
+        .quality { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+        .quality-icon { display: grid; width: 25px; height: 25px; place-items: center; color: var(--green); background: var(--green-light); border-radius: 50%; font-size: 10pt; font-weight: 700; }
+        .quality h3 { margin: 2px 0 4px; font-size: 11pt; }
+        .quality p { margin: 0; color: var(--muted); font-size: 9pt; line-height: 1.45; }
+        .rubric { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 18px; }
+        .rubric-box { padding: 14px 16px; background: var(--soft); border-radius: 5px; }
+        .rubric-box h3 { font-size: 11pt; }
+        .rubric-box ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 9pt; line-height: 1.6; }
+        .final-note { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 18px; padding: 13px 16px; color: white; background: var(--green-dark); border-radius: 5px; }
+        .final-note strong { font-size: 11pt; }.final-note span { color: #d0e1d7; font-size: 9pt; }
+        .screen-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: stretch; margin-top: 20px; }
+        .screen-frame { overflow: hidden; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; }
+        .screen-frame img { display: block; width: 100%; height: auto; }
+        .screen-caption { padding: 12px 14px; color: var(--muted); background: var(--soft); border-radius: 5px; font-size: 9pt; line-height: 1.45; }
+        .screen-caption strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 11pt; }
+        .screen-grid.three { grid-template-columns: repeat(3, 1fr); }
+        .screen-grid.three .screen-frame { box-shadow: 0 12px 30px rgba(23, 53, 46, .08); }
+        .screen-grid.three .screen-frame img { aspect-ratio: 16 / 9; object-fit: cover; }
+        .visual-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+        .visual-list div { padding: 11px; border-top: 2px solid var(--green); background: var(--soft); }
+        .visual-list strong { display: block; margin-bottom: 4px; font-size: 10pt; }
+        .visual-list span { color: var(--muted); font-size: 8pt; line-height: 1.4; }
+        @media screen and (max-width: 900px) { .slide { width: calc(100vw - 24px); height: auto; min-height: 675px; margin: 12px auto; padding: 25px; } .cover-main { grid-template-columns: 1fr; } .cover-art { display: none; } .role-grid, .schema, .screen-grid, .screen-grid.three { grid-template-columns: 1fr; } .flow { grid-template-columns: 1fr; } .flow-step:not(:last-child)::after { top: auto; right: 50%; bottom: -21px; transform: rotate(90deg); } .architecture { grid-template-columns: 1fr; } .arch-icon { transform: rotate(90deg); } .tech-row { grid-template-columns: repeat(2, 1fr); } .relation { grid-column: auto; flex-wrap: wrap; } .quality-grid, .rubric, .visual-list { grid-template-columns: 1fr; } }
+        @media print {
+            @page { size: 13.333in 7.5in; margin: 0; }
+            html, body { width: 13.333in; background: white; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+            .slide { width: 13.333in; height: 7.5in; margin: 0; padding: .52in .68in .42in; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <section class="slide cover">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>JAVA WEB APPLICATION</span></div>
+        <div class="cover-main">
+            <div><div class="kicker">ONLINE HEALTHCARE MANAGEMENT SYSTEM</div><h1>Care that stays <em>connected.</em></h1><p class="lead">A role-based web portal for appointment coordination, clinical notes and patient care.</p></div>
+            <div class="cover-art"><div class="orbit"></div><div class="heart-node">+</div><span class="orbit-tag tag-one">Patients</span><span class="orbit-tag tag-two">Care team</span><span class="orbit-tag tag-three">Appointments</span></div>
+        </div>
+        <div class="footline"><span>PROJECT PRESENTATION</span><span>Java &middot; Servlets &middot; JDBC &middot; MySQL</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>01 &nbsp; / &nbsp; THE SOLUTION</span></div>
+        <div class="title-block"><div class="kicker">ONE WORKSPACE, THREE ROLES</div><h2>Make everyday care easier to coordinate.</h2><p class="lead">Patients, clinicians and administrators each get tools designed around the work they need to do.</p></div>
+        <div class="role-grid">
+            <article class="role"><div class="role-number">01</div><h3>Patient</h3><p>Manage personal care without losing track of the next step.</p><div class="chips"><span class="chip">Book visits</span><span class="chip">View history</span><span class="chip">Update profile</span><span class="chip">Leave feedback</span></div></article>
+            <article class="role"><div class="role-number">02</div><h3>Doctor</h3><p>Coordinate availability and keep visit documentation connected to appointments.</p><div class="chips"><span class="chip">Publish open times</span><span class="chip">Manage visits</span><span class="chip">Write notes</span><span class="chip">Review ratings</span></div></article>
+            <article class="role"><div class="role-number">03</div><h3>Administrator</h3><p>Set up the clinic workspace and oversee scheduling activity.</p><div class="chips"><span class="chip">Manage accounts</span><span class="chip">Add doctors</span><span class="chip">Clinic settings</span><span class="chip">Activity overview</span></div></article>
+        </div>
+        <div class="callout"><strong>Design goal</strong><span>Keep the common healthcare tasks visible, direct and scoped to the signed-in role.</span></div>
+        <div class="footline"><span>CAREPOINT &nbsp; / &nbsp; HEALTHCARE MANAGEMENT</span><span>02</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>02 &nbsp; / &nbsp; CARE WORKFLOW</span></div>
+        <div class="title-block"><div class="kicker">FROM OPEN TIME TO VISIT HISTORY</div><h2>A connected appointment journey.</h2><p class="lead">Availability, slot validation and visit documentation keep scheduling tied to care delivery.</p></div>
+        <div class="flow">
+            <article class="flow-step"><div class="flow-no">01</div><h3>Publish</h3><p>Doctor adds a future availability window.</p></article>
+            <article class="flow-step"><div class="flow-no">02</div><h3>Request</h3><p>Patient chooses a clinician, time and reason.</p></article>
+            <article class="flow-step"><div class="flow-no">03</div><h3>Validate</h3><p>System checks the window and overlapping bookings.</p></article>
+            <article class="flow-step"><div class="flow-no">04</div><h3>Coordinate</h3><p>Doctor confirms, completes or cancels the visit.</p></article>
+            <article class="flow-step"><div class="flow-no">05</div><h3>Document</h3><p>Doctor records a note; patient can review and rate the visit.</p></article>
+        </div>
+        <div class="callout"><strong>Data follows the visit</strong><span>Medical notes are linked to the appointment and patient, with access limited by role.</span></div>
+        <div class="footline"><span>CAREPOINT &nbsp; / &nbsp; HEALTHCARE MANAGEMENT</span><span>03</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>03 &nbsp; / &nbsp; TECHNICAL DESIGN</span></div>
+        <div class="title-block"><div class="kicker">JAVA WEB ARCHITECTURE</div><h2>Simple layers, clear responsibilities.</h2><p class="lead">Servlets handle requests, repositories own JDBC operations, and JSP renders role-specific pages.</p></div>
+        <div class="architecture">
+            <article class="arch-box"><div class="kicker">PRESENTATION</div><h3>JSP &amp; CSS</h3><p>Responsive pages, forms and role-specific navigation. Views stay under <code>WEB-INF</code>.</p></article>
+            <div class="arch-icon">&#8594;</div>
+            <article class="arch-box primary"><div class="kicker">WEB &amp; DOMAIN</div><h3>Jakarta Servlets</h3><p>Authentication, validation, authorization, workflow rules and request routing.</p></article>
+            <div class="arch-icon">&#8594;</div>
+            <article class="arch-box"><div class="kicker">DATA ACCESS</div><h3>JDBC repositories</h3><p>Prepared SQL statements, role-scoped queries and MySQL persistence.</p></article>
+        </div>
+        <div class="tech-row"><div class="tech"><strong>Java</strong><span>JDK 17+ target</span></div><div class="tech"><strong>Maven</strong><span>Build &amp; dependencies</span></div><div class="tech"><strong>Jetty 12</strong><span>Local Servlet container</span></div><div class="tech"><strong>JDBC</strong><span>MySQL Connector/J</span></div><div class="tech"><strong>MySQL 8</strong><span>Relational database</span></div></div>
+        <div class="callout"><strong>Separation of concerns</strong><span>Models are small Java records; repositories encapsulate database operations; JSP focuses on presentation.</span></div>
+        <div class="footline"><span>CAREPOINT &nbsp; / &nbsp; HEALTHCARE MANAGEMENT</span><span>04</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>04 &nbsp; / &nbsp; DATA DESIGN</span></div>
+        <div class="title-block"><div class="kicker">MYSQL RELATIONAL MODEL</div><h2>Records stay connected to their owners.</h2><p class="lead">Foreign keys keep appointments, clinical notes and feedback attached to the correct accounts.</p></div>
+        <div class="schema">
+            <article class="table-card"><h3>users <span>ACCOUNT</span></h3><div class="field"><strong>id</strong><small>PK</small></div><div class="field">full_name <small>required</small></div><div class="field">email <small>unique</small></div><div class="field">password_hash <small>PBKDF2</small></div><div class="field">role, specialty, active <small>access</small></div></article>
+            <article class="table-card"><h3>appointments <span>VISIT</span></h3><div class="field"><strong>id</strong><small>PK</small></div><div class="field">patient_id <small>FK: users</small></div><div class="field">doctor_id <small>FK: users</small></div><div class="field">appointment_at <small>datetime</small></div><div class="field">status, reason <small>workflow</small></div></article>
+            <article class="table-card"><h3>doctor_availability <span>SCHEDULE</span></h3><div class="field"><strong>id</strong><small>PK</small></div><div class="field">doctor_id <small>FK: users</small></div><div class="field">available_from <small>datetime</small></div><div class="field">available_to <small>datetime</small></div><div class="field">published window <small>slot rule</small></div></article>
+            <div class="relation">users <span>1 : many</span> appointments <span>1 : many</span> medical_records <span>1 : many</span> feedback</div>
+            <article class="table-card"><h3>medical_records <span>CLINICAL NOTE</span></h3><div class="field"><strong>id</strong><small>PK</small></div><div class="field">appointment_id <small>FK</small></div><div class="field">patient_id, doctor_id <small>FK: users</small></div><div class="field">diagnosis <small>required</small></div><div class="field">notes <small>private</small></div></article>
+            <article class="table-card"><h3>feedback <span>REVIEW</span></h3><div class="field"><strong>id</strong><small>PK</small></div><div class="field">patient_id, doctor_id <small>FK: users</small></div><div class="field">rating <small>1 to 5</small></div><div class="field">comments <small>optional</small></div><div class="field">created_at <small>timestamp</small></div></article>
+            <article class="table-card"><h3>system_settings <span>CONFIG</span></h3><div class="field"><strong>setting_key</strong><small>PK</small></div><div class="field">setting_value <small>clinic options</small></div><div class="field">clinic name <small>configurable</small></div><div class="field">appointment length <small>10-180 min</small></div></article>
+        </div>
+        <div class="footline"><span>SCHEMA SCRIPT: <code>database/schema.sql</code></span><span>05</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>05 &nbsp; / &nbsp; QUALITY &amp; DELIVERY</span></div>
+        <div class="title-block"><div class="kicker">RUBRIC-ALIGNED IMPLEMENTATION</div><h2>Built to demonstrate the core Java web skills.</h2></div>
+        <div class="quality-grid">
+            <article class="quality"><span class="quality-icon">1</span><div><h3>Problem understanding</h3><p>Three roles have distinct dashboards and permitted actions.</p></div></article>
+            <article class="quality"><span class="quality-icon">2</span><div><h3>Core Java concepts</h3><p>Models, services, collections, validation and exception handling keep responsibilities explicit.</p></div></article>
+            <article class="quality"><span class="quality-icon">3</span><div><h3>JDBC integration</h3><p>Prepared statements and repository classes connect Java operations to MySQL tables.</p></div></article>
+            <article class="quality"><span class="quality-icon">4</span><div><h3>Servlets &amp; web integration</h3><p>Servlet routes, session authentication, JSP views and a responsive interface.</p></div></article>
+            <article class="quality"><span class="quality-icon">5</span><div><h3>Safer account handling</h3><p>Salted PBKDF2 hashes, session ID rotation, CSRF validation and role checks.</p></div></article>
+            <article class="quality"><span class="quality-icon">6</span><div><h3>Readable delivery</h3><p>Modular Maven layout, schema script, setup README and focused unit tests.</p></div></article>
+        </div>
+        <div class="rubric">
+            <div class="rubric-box"><h3>Run locally</h3><ul><li>JDK 17+, Maven 3.9+, MySQL 8+</li><li>Load <code>database/schema.sql</code></li><li>Set DB environment variables</li><li><code>mvn clean test package</code></li></ul></div>
+            <div class="rubric-box"><h3>Submission checks</h3><ul><li>Push current source to a reviewer-accessible GitHub repository</li><li>Keep this README with setup and run steps</li><li>Include this PDF deck and relevant app screenshots</li><li>Verify repository link and deadline requirements</li></ul></div>
+        </div>
+        <div class="final-note"><strong>Carepoint Healthcare</strong><span>Academic demonstration only. Not intended for real patient data or clinical use.</span></div>
+        <div class="footline"><span>CAREPOINT &nbsp; / &nbsp; PROJECT PRESENTATION</span><span>06</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>07 &nbsp; / &nbsp; PRODUCT EXPERIENCE</span></div>
+        <div class="title-block"><div class="kicker">PUBLIC PORTAL</div><h2>A clear first impression.</h2><p class="lead">The landing page explains the value of the system and provides direct access to account creation and sign-in.</p></div>
+        <div class="screen-grid"><div class="screen-frame"><img src="screenshots/landing-page.png" alt="Carepoint landing page"></div><div class="screen-caption"><strong>What visitors see first</strong>Clear messaging, patient and clinician roles, a responsive feature overview, and a prominent account creation path.</div></div>
+        <div class="visual-list"><div><strong>Responsive design</strong><span>Core public content adapts to desktop and mobile views.</span></div><div><strong>Clear navigation</strong><span>How it works, features, security and support links stay accessible.</span></div><div><strong>Accessible actions</strong><span>Primary sign-in and registration actions use consistent labels and structure.</span></div></div>
+        <div class="footline"><span>SCREENSHOT: docs/screenshots/landing-page.png</span><span>07</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>08 &nbsp; / &nbsp; ACCESS</span></div>
+        <div class="title-block"><div class="kicker">AUTHENTICATION</div><h2>Role-aware sign-in.</h2><p class="lead">Each role receives a focused login experience, while the shared layer preserves secure account handling.</p></div>
+        <div class="screen-grid three">
+            <div class="screen-frame"><img src="screenshots/login-page.png" alt="Patient and clinician login page"></div>
+            <div class="screen-frame"><img src="screenshots/doctor-login-page.png" alt="Doctor login page"></div>
+            <div class="screen-frame"><img src="screenshots/register-page.png" alt="Account registration page"></div>
+        </div>
+        <div class="screen-caption"><strong>Security baseline</strong>Password hashes use salted PBKDF2, sessions rotate after authentication, and CSRF validation is applied to state-changing requests.</div>
+        <div class="footline"><span>SCREENSHOTS: docs/screenshots</span><span>08</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>09 &nbsp; / &nbsp; PATIENT DASHBOARD</span></div>
+        <div class="title-block"><div class="kicker">PATIENT WORKSPACE</div><h2>Care at a glance.</h2><p class="lead">Patients can review upcoming appointments, access shared records, and move into schedule or profile actions.</p></div>
+        <div class="screen-grid"><div class="screen-frame"><img src="screenshots/patient-page.png" alt="Patient dashboard"></div><div class="screen-caption"><strong>Patient focus</strong>Appointment status, medical record access and available clinician discovery are grouped into clear, role-specific views.</div></div>
+        <div class="footline"><span>SCREENSHOT: docs/screenshots/patient-page.png</span><span>09</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>10 &nbsp; / &nbsp; DOCTOR DASHBOARD</span></div>
+        <div class="title-block"><div class="kicker">CLINICAL WORKSPACE</div><h2>Every visit, organized.</h2><p class="lead">Doctors can publish availability, review scheduled visits, record clinical notes and manage patient-facing follow-up.</p></div>
+        <div class="screen-grid"><div class="screen-frame"><img src="screenshots/doctor-page.png" alt="Doctor dashboard"></div><div class="screen-caption"><strong>Clinical focus</strong>Visit workflows and record actions are separated from patient account management and platform administration.</div></div>
+        <div class="footline"><span>SCREENSHOT: docs/screenshots/doctor-page.png</span><span>10</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>11 &nbsp; / &nbsp; ADMIN DASHBOARD</span></div>
+        <div class="title-block"><div class="kicker">PLATFORM OPERATIONS</div><h2>Administration without the noise.</h2><p class="lead">Administrators can manage users, clinics, appointment activity, platform settings and operational reporting.</p></div>
+        <div class="screen-grid"><div class="screen-frame"><img src="screenshots/clinic-page.png" alt="Clinic administration page"></div><div class="screen-caption"><strong>Platform focus</strong>Clinic configuration and user management sit alongside the system-wide activity overview.</div></div>
+        <div class="footline"><span>SCREENSHOT: docs/screenshots/clinic-page.png</span><span>11</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>12 &nbsp; / &nbsp; ROLE WORKFLOWS</span></div>
+        <div class="title-block"><div class="kicker">THE COMPLETE CARE JOURNEY</div><h2>One connected experience.</h2><p class="lead">The application supports discovery, booking, clinical documentation, follow-up and feedback across the care team.</p></div>
+        <div class="screen-grid three">
+            <div class="screen-frame"><img src="dashboard-preview-patient.svg" alt="Patient dashboard interface preview"></div>
+            <div class="screen-frame"><img src="dashboard-preview-doctor.svg" alt="Doctor dashboard interface preview"></div>
+            <div class="screen-frame"><img src="dashboard-preview-admin.svg" alt="Administrator dashboard interface preview"></div>
+        </div>
+        <div class="screen-caption"><strong>Interface previews</strong>These three dashboard visuals are intentionally labeled as mockups and contain no real patient or operational data.</div>
+        <div class="footline"><span>PREVIEWS: docs/dashboard-preview-*.svg</span><span>12</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>13 &nbsp; / &nbsp; SECURITY &amp; QUALITY</span></div>
+        <div class="title-block"><div class="kicker">SAFE BY DESIGN</div><h2>Clear boundaries for every action.</h2><p class="lead">The application applies role checks, input validation, secure passwords, CSRF protection and repository-based data access.</p></div>
+        <div class="quality-grid">
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>Role-based access</h3><p>Every protected route verifies the signed-in account’s role.</p></div></article>
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>Stored securely</h3><p>Passwords use salted PBKDF2 rather than plain-text storage.</p></div></article>
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>Validated input</h3><p>Appointment, scheduling and profile data are checked before persistence.</p></div></article>
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>CSRF protection</h3><p>State-changing requests require a valid session token.</p></div></article>
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>Prepared SQL</h3><p>Repository queries use placeholders and domain-focused methods.</p></div></article>
+            <article class="quality"><span class="quality-icon">✓</span><div><h3>Unit tested</h3><p>Core password behavior is covered by JUnit tests.</p></div></article>
+        </div>
+        <div class="footline"><span>CODE: src/main/java &middot; TESTS: src/test/java</span><span>13</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="topline"><div class="brand"><span class="brand-mark">C</span>carepoint</div><span>14 &nbsp; / &nbsp; DELIVERY</span></div>
+        <div class="title-block"><div class="kicker">READY FOR REVIEW</div><h2>Build, test and present.</h2><p class="lead">The Maven project can be compiled and tested, then served locally with Jetty for demonstration.</p></div>
+        <div class="rubric">
+            <div class="rubric-box"><h3>Build and verify</h3><ul><li><code>mvn clean test package</code></li><li>Verify Java compilation and JUnit results</li><li>Run the packaged WAR with Jetty</li><li>Confirm the database settings are available</li></ul></div>
+            <div class="rubric-box"><h3>Submission handoff</h3><ul><li>Push the repository to a reviewer-accessible GitHub URL</li><li>Include the application README and database schema</li><li>Share this PDF and the screenshot collection</li><li>Record the exact run instructions and demo credentials</li></ul></div>
+        </div>
+        <div class="final-note"><strong>Carepoint Healthcare</strong><span>Academic demonstration only. No real patient information is included in this presentation.</span></div>
+        <div class="footline"><span>CAREPOINT &nbsp; / &nbsp; PROJECT PRESENTATION</span><span>14</span></div>
+    </section>
+</body>
+</html>
