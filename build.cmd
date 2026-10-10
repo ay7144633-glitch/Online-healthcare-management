@@ -85,6 +85,24 @@ if not defined MYSQL_EXE (
     exit /b 1
 )
 
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$version = (& javac -version 2>&1 | Out-String); if ($version -notmatch 'javac\s+(\d+)') { Write-Error ('Could not determine the JDK version: ' + $version.Trim()); exit 1 }; if ([int]$Matches[1] -lt 17) { Write-Error ('JDK 17 or newer is required; found ' + $version.Trim()); exit 1 }"
+if errorlevel 1 (
+    echo ERROR: Install and select JDK 17 or newer, then rerun build.cmd.
+    exit /b 1
+)
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$version = (& mvn -version 2>&1 | Out-String); if ($version -notmatch 'Apache Maven\s+(\d+)\.(\d+)') { Write-Error ('Could not determine the Maven version: ' + $version.Trim()); exit 1 }; $major = [int]$Matches[1]; $minor = [int]$Matches[2]; if ($major -lt 3 -or ($major -eq 3 -and $minor -lt 9)) { Write-Error ('Maven 3.9 or newer is required; found ' + $Matches[0]); exit 1 }"
+if errorlevel 1 (
+    echo ERROR: Install and select Maven 3.9 or newer, then rerun build.cmd.
+    exit /b 1
+)
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$version = (& '%MYSQL_EXE%' --version 2>&1 | Out-String); if ($version -notmatch 'Ver\s+(\d+)\.(\d+)') { Write-Error ('Could not determine the MySQL client version: ' + $version.Trim()); exit 1 }; $major = [int]$Matches[1]; $found = $Matches[0]; if ($version -notmatch 'MySQL') { Write-Error ('The MySQL 8.0 or newer client is required; found ' + $version.Trim()); exit 1 }; if ($major -lt 8) { Write-Error ('MySQL 8.0 or newer is required; found ' + $found); exit 1 }"
+if errorlevel 1 (
+    echo ERROR: Install and select the MySQL 8.0 or newer command-line client, then rerun build.cmd.
+    exit /b 1
+)
+
 for /f "tokens=2" %%S in ('sc.exe query state^= all ^| findstr /R /C:"SERVICE_NAME: MySQL"') do if not defined MYSQL_SERVICE set "MYSQL_SERVICE=%%S"
 if not defined MYSQL_SERVICE (
     echo ERROR: No MySQL Windows service was found. Install and configure MySQL Server first.
@@ -125,7 +143,9 @@ set "MYSQL_EXIT=%ERRORLEVEL%"
 del /q "%SCHEMA_TEMP%" >nul 2>nul
 if not "%MYSQL_EXIT%"=="0" (
     del /q "%ADMIN_COUNT_FILE%" >nul 2>nul
-    echo ERROR: Database setup failed. Check the MySQL password and service status.
+    echo ERROR: Database setup failed. Check the MySQL password, service, and server version.
+    echo This project requires MySQL Server 8.0 or newer; older versions do not support its database collation.
+    echo See README.md under "Troubleshooting build and startup failures" for help.
     exit /b 1
 )
 set /p "ADMIN_COUNT="<"%ADMIN_COUNT_FILE%"
@@ -146,6 +166,7 @@ echo Building and running tests...
 call mvn clean test package
 if errorlevel 1 (
     echo ERROR: Maven build or tests failed.
+    echo See README.md under "Troubleshooting build and startup failures" for common causes.
     exit /b 1
 )
 

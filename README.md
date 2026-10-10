@@ -19,9 +19,24 @@ A Java web application for coordinating patient appointments and clinic operatio
 
 ## Windows quick start
 
-From the project folder, run `build.cmd`. It sets up the database, builds and tests the project, starts Jetty, waits for the Carepoint homepage to respond successfully, and then opens `http://localhost:8081` in your default browser. If the homepage does not become ready within two minutes, the launcher reports the last request error instead of opening an unavailable page. Enter your MySQL root password when prompted; the password input is hidden. The script asks for it again for the application connection. It prompts for a bootstrap administrator email and password only if the database has no admin account. These passwords are not saved in the script.
+From the project folder, run `build.cmd`. It checks that the JDK is 17 or newer, Maven is 3.9 or newer, and the MySQL command-line client is 8.0 or newer. It then sets up the database, builds and tests the project, starts Jetty, waits for the Carepoint homepage to respond successfully, and opens `http://localhost:8081` in your default browser. The database server must also be MySQL 8.0 or newer. If the homepage does not become ready within two minutes, the launcher reports the last request error instead of opening an unavailable page. Enter your MySQL root password when prompted; the password input is hidden. The script asks for it again for the application connection. It prompts for a bootstrap administrator email and password only if the database has no admin account. These passwords are not saved in the script.
 
 If `build.cmd` installs Java or MySQL, reopen the terminal and run it again. Starting the MySQL service may require an administrator terminal. Run `build.cmd /check` to verify that Java, Maven, the MySQL client, and a MySQL Windows service are present without setting up the database or starting the app.
+
+## Troubleshooting build and startup failures
+
+`build.cmd` prints an `ERROR:` message and stops when a required tool is missing or below its supported version. Maven also prints the specific compiler, test, or packaging error; read the first `[ERROR]` details above the final `BUILD FAILURE` summary. Common causes and fixes:
+
+| Error or symptom | What to check |
+| --- | --- |
+| JDK/Maven/MySQL client version is below the required minimum | Install JDK 17+, Maven 3.9+, and the MySQL 8.0+ command-line client. Open a new terminal so `PATH` and `JAVA_HOME` point to the intended versions, then rerun `build.cmd`. |
+| `Database setup failed` or `Unknown collation: utf8mb4_0900_ai_ci` | Confirm the MySQL **server** is version 8.0 or newer, that its Windows service is running, and that the root password is correct. The client version check does not determine the server version; the schema requires MySQL 8.0's `utf8mb4_0900_ai_ci` collation. |
+| `Access denied` or a connection error | Check the MySQL username/password, service status, and host/port. The launcher uses `localhost:3306`; use the manual setup instructions if your server uses another port or account. |
+| Maven reports compilation or test failures | Read the first Maven `[ERROR]` output and confirm the supported JDK is selected. For database integration-test failures, confirm MySQL is available and the `DB_*` settings are correct. |
+| `Address already in use` or homepage readiness timeout | Port 8081 may be occupied, or Jetty may not have started. Stop the process using that port or use the manual run command with `-Djetty.http.port=8082`; check the Jetty error output and database settings. |
+| `JAVA_HOME` is invalid | Set `JAVA_HOME` to the JDK installation directory, not its `bin` directory, and make sure `JAVA_HOME\bin` is on `PATH`. |
+
+To check the database server version independently of the client, run `mysql -u root -p -e "SELECT VERSION();"` and confirm it reports 8.0 or newer.
 
 ## Database setup
 
