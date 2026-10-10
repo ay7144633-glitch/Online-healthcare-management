@@ -9,46 +9,106 @@
     <title><c:out value="${pageTitle}" /> | Carepoint</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/assets/app.css">
-    <c:if test="${activePath == '/doctor/schedule'}"><link rel="stylesheet" href="${ctx}/assets/schedule.css"></c:if>
-    <c:if test="${activePath == '/dashboard' && user.role() == 'ADMIN'}"><link rel="stylesheet" href="${ctx}/assets/admin-dashboard.css"></c:if>
-    <c:if test="${activePath == '/records' && user.role() == 'PATIENT'}"><link rel="stylesheet" href="${ctx}/assets/patient-history.css"></c:if>
+    <c:if test="${activePath == '/doctor/schedule'}">
+        <link rel="stylesheet" href="${ctx}/assets/schedule.css">
+    </c:if>
+    <c:if test="${activePath == '/dashboard' && user.role() == 'ADMIN'}">
+        <link rel="stylesheet" href="${ctx}/assets/admin-dashboard.css">
+    </c:if>
+    <c:if test="${activePath == '/records' && user.role() == 'PATIENT'}">
+        <link rel="stylesheet" href="${ctx}/assets/patient-history.css">
+    </c:if>
+    <link rel="stylesheet" href="${ctx}/assets/readability.css">
 </head>
 <body class="app-body">
 <div class="app-layout">
     <aside class="sidebar">
-        <a class="brand" href="${ctx}/dashboard" aria-label="Carepoint home"><span class="brand-mark">C</span><span>carepoint</span></a>
+        <a class="brand" href="${ctx}/dashboard" aria-label="Carepoint home">
+            <span class="brand-mark">C</span>
+            <span>carepoint</span>
+        </a>
         <div class="workspace-label">WORKSPACE</div>
         <nav class="primary-nav" aria-label="Main navigation">
-            <a class="nav-link ${activePath == '/dashboard' ? 'is-active' : ''}" href="${ctx}/dashboard"><span class="nav-symbol">01</span>Overview</a>
-            <a class="nav-link ${activePath == '/appointments' ? 'is-active' : ''}" href="${ctx}/appointments"><span class="nav-symbol">02</span>Appointments</a>
-            <c:if test="${user.role() != 'ADMIN'}"><a class="nav-link ${activePath == '/records' ? 'is-active' : ''}" href="${ctx}/records"><span class="nav-symbol">03</span>Medical records</a></c:if>
+            <a class="nav-link ${activePath == '/dashboard' ? 'is-active' : ''}"
+               href="${ctx}/dashboard">
+                <span class="nav-symbol">01</span>Overview
+            </a>
+            <a class="nav-link ${activePath == '/appointments' ? 'is-active' : ''}"
+               href="${ctx}/appointments">
+                <span class="nav-symbol">02</span>Appointments
+            </a>
+            <c:if test="${user.role() != 'ADMIN'}">
+                <a class="nav-link ${activePath == '/records' ? 'is-active' : ''}"
+                   href="${ctx}/records">
+                    <span class="nav-symbol">03</span>Medical records
+                </a>
+            </c:if>
             <c:if test="${user.role() == 'ADMIN'}">
                 <div class="workspace-label nav-divider">ADMINISTRATION</div>
-                <a class="nav-link ${activePath == '/admin/users' ? 'is-active' : ''}" href="${ctx}/admin/users"><span class="nav-symbol">04</span>People</a>
-                <a class="nav-link ${activePath == '/admin/settings' ? 'is-active' : ''}" href="${ctx}/admin/settings"><span class="nav-symbol">05</span>Clinic settings</a>
+                <a class="nav-link ${activePath == '/admin/users' ? 'is-active' : ''}"
+                   href="${ctx}/admin/users">
+                    <span class="nav-symbol">04</span>People
+                </a>
+                <a class="nav-link ${activePath == '/admin/settings' ? 'is-active' : ''}"
+                   href="${ctx}/admin/settings">
+                    <span class="nav-symbol">05</span>Clinic settings
+                </a>
             </c:if>
             <c:if test="${user.role() == 'DOCTOR'}">
                 <div class="workspace-label nav-divider">PRACTICE</div>
-                <a class="nav-link ${activePath == '/doctor/schedule' ? 'is-active' : ''}" href="${ctx}/doctor/schedule"><span class="nav-symbol">06</span>Availability</a>
-                <a class="nav-link ${activePath == '/doctor/records' ? 'is-active' : ''}" href="${ctx}/doctor/records"><span class="nav-symbol">07</span>Add visit note</a>
+                <a class="nav-link ${activePath == '/doctor/schedule' ? 'is-active' : ''}"
+                   href="${ctx}/doctor/schedule">
+                    <span class="nav-symbol">06</span>Availability
+                </a>
+                <a class="nav-link ${activePath == '/doctor/records' ? 'is-active' : ''}"
+                   href="${ctx}/doctor/records">
+                    <span class="nav-symbol">07</span>Add visit note
+                </a>
             </c:if>
             <c:if test="${user.role() == 'PATIENT'}">
                 <div class="workspace-label nav-divider">YOUR ACCOUNT</div>
-                <a class="nav-link ${activePath == '/patient/profile' ? 'is-active' : ''}" href="${ctx}/patient/profile"><span class="nav-symbol">07</span>Profile</a>
-                <a class="nav-link ${activePath == '/patient/feedback' ? 'is-active' : ''}" href="${ctx}/patient/feedback"><span class="nav-symbol">08</span>Feedback</a>
+                <a class="nav-link ${activePath == '/patient/profile' ? 'is-active' : ''}"
+                   href="${ctx}/patient/profile">
+                    <span class="nav-symbol">07</span>Profile
+                </a>
+                <a class="nav-link ${activePath == '/patient/feedback' ? 'is-active' : ''}"
+                   href="${ctx}/patient/feedback">
+                    <span class="nav-symbol">08</span>Feedback
+                </a>
             </c:if>
         </nav>
         <div class="sidebar-bottom">
-            <div class="care-note"><span class="care-pulse"></span><div><strong>Care, coordinated.</strong><small>Your health in one place.</small></div></div>
-            <a class="signout-link" href="${ctx}/logout">Sign out <span aria-hidden="true">&#8594;</span></a>
+            <div class="care-note">
+                <span class="care-pulse"></span>
+                <div>
+                    <strong>Care, coordinated.</strong>
+                    <small>Your health in one place.</small>
+                </div>
+            </div>
+            <a class="signout-link" href="${ctx}/logout">
+                Sign out <span aria-hidden="true">&#8594;</span>
+            </a>
         </div>
     </aside>
     <main class="main-area">
         <header class="topbar">
-            <div class="crumb"><span>Carepoint</span><span class="crumb-slash">/</span><strong><c:out value="${pageTitle}" /></strong></div>
-            <div class="account-chip"><span class="account-avatar"><c:out value="${user.fullName().substring(0, 1).toUpperCase()}" /></span><span class="account-name"><c:out value="${user.fullName()}" /></span><span class="role-tag"><c:out value="${user.role().toLowerCase()}" /></span></div>
+            <div class="crumb">
+                <span>Carepoint</span>
+                <span class="crumb-slash">/</span>
+                <strong><c:out value="${pageTitle}" /></strong>
+            </div>
+            <div class="account-chip">
+                <span class="account-avatar">
+                    <c:out value="${user.fullName().substring(0, 1).toUpperCase()}" />
+                </span>
+                <span class="account-name"><c:out value="${user.fullName()}" /></span>
+                <span class="role-tag"><c:out value="${user.role().toLowerCase()}" /></span>
+            </div>
         </header>
         <section class="page-content">
-            <c:if test="${not empty flash}"><div class="notice notice-success" role="status"><c:out value="${flash}" /></div></c:if>
+            <c:if test="${not empty flash}">
+                <div class="notice notice-success" role="status"><c:out value="${flash}" /></div>
+            </c:if>

@@ -90,6 +90,10 @@ public class UserRepository {
         return queryUsers("SELECT id, full_name, email, role, specialty, active FROM users WHERE role = 'DOCTOR' AND active = TRUE ORDER BY full_name");
     }
 
+    public List<User> listPatients() throws SQLException {
+        return queryUsers("SELECT id, full_name, email, role, specialty, active FROM users WHERE role = 'PATIENT' AND active = TRUE ORDER BY full_name");
+    }
+
     public User findById(long id) throws SQLException {
         String sql = "SELECT id, full_name, email, role, specialty, active FROM users WHERE id = ? AND active = TRUE";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {

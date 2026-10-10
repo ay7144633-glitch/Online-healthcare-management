@@ -19,20 +19,36 @@ public class SettingRepository {
         }
         settings.putIfAbsent("clinic_name", "Carepoint Clinic");
         settings.putIfAbsent("appointment_duration", "30");
+        settings.putIfAbsent("clinic_email", "");
+        settings.putIfAbsent("clinic_phone", "");
+        settings.putIfAbsent("clinic_address", "");
         return settings;
     }
 
-    public void save(String clinicName, int appointmentDuration) throws SQLException {
+    public void save(String clinicName, int appointmentDuration, String clinicEmail, String clinicPhone,
+            String clinicAddress) throws SQLException {
         String sql = "INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?) "
                 + "ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)";
-        try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, "clinic_name");
-            statement.setString(2, clinicName.trim());
-            statement.executeUpdate();
-            statement.setString(1, "appointment_duration");
-            statement.setString(2, Integer.toString(appointmentDuration));
-            statement.executeUpdate();
+        try (Connection connection = Database.getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                saveValue(statement, "clinic_name", clinicName.trim());
+                saveValue(statement, "appointment_duration", Integer.toString(appointmentDuration));
+                saveValue(statement, "clinic_email", clinicEmail.trim());
+                saveValue(statement, "clinic_phone", clinicPhone.trim());
+                saveValue(statement, "clinic_address", clinicAddress.trim());
+                connection.commit();
+            } catch (SQLException exception) {
+                connection.rollback();
+                throw exception;
+            }
         }
+    }
+
+    private void saveValue(PreparedStatement statement, String key, String value) throws SQLException {
+        statement.setString(1, key);
+        statement.setString(2, value);
+        statement.executeUpdate();
     }
 
     public int appointmentDuration() throws SQLException {

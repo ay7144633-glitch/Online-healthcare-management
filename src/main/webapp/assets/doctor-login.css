@@ -9,12 +9,11 @@
 .doctor-login-header {
     position: relative;
     z-index: 2;
-    display: grid;
-    grid-template-columns: minmax(145px, 1fr) auto minmax(190px, 1fr);
+    display: flex;
     align-items: center;
     gap: 24px;
     min-height: 76px;
-    padding: 0 max(5vw, 28px);
+    padding: 0 max(6.5vw, 28px);
     background: #fbfcfa;
     border-bottom: 1px solid #e4ebe5;
 }
@@ -24,14 +23,15 @@
     align-items: center;
     justify-content: center;
     gap: clamp(17px, 2.4vw, 34px);
+    margin: 0 auto;
 }
 
 .doctor-login-nav a {
     position: relative;
-    padding: 9px 0;
+    padding: 11px 0;
     color: #53675e;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -52,10 +52,14 @@
 }
 
 .doctor-login-general-link {
-    justify-self: end;
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
     color: #155f4c;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -207,6 +211,7 @@
 
 @media (max-width: 900px) {
     .doctor-login-header {
+        display: grid;
         grid-template-columns: 1fr auto;
         gap: 8px 20px;
         min-height: 68px;
@@ -217,8 +222,9 @@
         grid-column: 1 / -1;
         grid-row: 2;
         justify-content: flex-start;
-        gap: 24px;
+        gap: 20px;
         overflow-x: auto;
+        margin: 0;
     }
 
     .doctor-login-general-link {
@@ -255,8 +261,10 @@
 
     .doctor-login-nav a,
     .doctor-login-general-link {
-        font-size: 10px;
+        font-size: 13px;
     }
+
+    .doctor-login-general-link { min-height: 40px; padding: 0 8px; }
 
     .doctor-login-main {
         grid-template-columns: 1fr;

@@ -13,6 +13,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.version>12.0.16</jetty.version>
+        <jetty.http.port>8081</jetty.http.port>
     </properties>
 
     <dependencies>
@@ -69,7 +70,7 @@
                 <version>${jetty.version}</version>
                 <configuration>
                     <httpConnector>
-                        <port>8081</port>
+                        <port>${jetty.http.port}</port>
                     </httpConnector>
                 </configuration>
                 <dependencies>

@@ -42,9 +42,17 @@ public class ActionServlet extends HttpServlet {
             switch (action == null ? "" : action) {
                 case "/appointments/book" -> {
                     requireRole(user, "PATIENT");
-                        appointments.book(user.id(), number(request, "doctorId"),
-                            LocalDateTime.parse(value(request, "appointmentAt")), value(request, "reason"), settings.appointmentDuration());
+                    appointments.book(user.id(), number(request, "doctorId"),
+                            appointmentDateTime(request), value(request, "reason"), settings.appointmentDuration());
                     message(request, "Appointment request sent to the doctor.");
+                    destination = safeDestination(request, "/appointments");
+                }
+                case "/appointments/book-for-patient" -> {
+                    requireRole(user, "ADMIN");
+                    appointments.book(number(request, "patientId"), number(request, "doctorId"),
+                            appointmentDateTime(request), value(request, "reason"),
+                            settings.appointmentDuration());
+                    message(request, "Appointment scheduled for the selected patient.");
                     destination = safeDestination(request, "/appointments");
                 }
                 case "/appointments/status" -> {
@@ -60,16 +68,18 @@ public class ActionServlet extends HttpServlet {
                     message(request, "Appointment rescheduled.");
                     destination = safeDestination(request, "/appointments");
                 }
-                case "/users/create-doctor" -> {
+                case "/users/create-account" -> {
                     requireRole(user, "ADMIN");
                     String name = value(request, "fullName");
                     String email = value(request, "email");
                     String password = value(request, "password");
-                    if (name.length() < 2 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$") || password.length() < 8) {
-                        throw new IllegalArgumentException("Enter a name, valid email, and password with at least 8 characters.");
+                    String role = value(request, "role");
+                    if (name.length() < 2 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+                            || password.length() < 8 || !java.util.List.of("ADMIN", "DOCTOR", "PATIENT").contains(role)) {
+                        throw new IllegalArgumentException("Enter a name, valid email, password with at least 8 characters, and a valid role.");
                     }
-                    users.createUser(name, email, password, "DOCTOR", value(request, "specialty"));
-                    message(request, "Doctor account created.");
+                    users.createUser(name, email, password, role, value(request, "specialty"));
+                    message(request, "Account created.");
                     destination = safeDestination(request, "/admin/users");
                 }
                 case "/users/toggle" -> {
@@ -165,11 +175,17 @@ public class ActionServlet extends HttpServlet {
                 case "/settings/save" -> {
                     requireRole(user, "ADMIN");
                     String clinicName = value(request, "clinicName");
+                    String clinicEmail = value(request, "clinicEmail");
+                    String clinicPhone = value(request, "clinicPhone");
+                    String clinicAddress = value(request, "clinicAddress");
                     int duration = Integer.parseInt(value(request, "appointmentDuration"));
-                    if (clinicName.isBlank() || duration < 10 || duration > 180) {
-                        throw new IllegalArgumentException("Enter a clinic name and appointment duration from 10 to 180 minutes.");
+                    if (clinicName.isBlank() || clinicName.length() > 120 || duration < 10 || duration > 180
+                            || clinicEmail.length() > 190 || !clinicEmail.isEmpty()
+                                    && !clinicEmail.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+                            || clinicPhone.length() > 40 || clinicAddress.length() > 250) {
+                        throw new IllegalArgumentException("Enter valid clinic contact details and an appointment duration from 10 to 180 minutes.");
                     }
-                    settings.save(clinicName, duration);
+                    settings.save(clinicName, duration, clinicEmail, clinicPhone, clinicAddress);
                     message(request, "Clinic settings saved.");
                     destination = safeDestination(request, "/admin/settings");
                 }
@@ -237,6 +253,14 @@ public class ActionServlet extends HttpServlet {
 
     private long number(HttpServletRequest request, String name) {
         return Long.parseLong(value(request, name));
+    }
+
+    private LocalDateTime appointmentDateTime(HttpServletRequest request) {
+        try {
+            return LocalDateTime.parse(value(request, "appointmentAt"));
+        } catch (DateTimeException exception) {
+            throw new IllegalArgumentException("Choose a valid appointment date and time.");
+        }
     }
 
     private void requireRole(User user, String role) {

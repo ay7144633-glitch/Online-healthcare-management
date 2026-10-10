@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import com.healthcare.data.AppointmentRepository;
 import com.healthcare.data.AvailabilityRepository;
@@ -14,6 +17,8 @@ import com.healthcare.data.MedicalRecordRepository;
 import com.healthcare.data.PatientHistoryRepository;
 import com.healthcare.data.SettingRepository;
 import com.healthcare.data.UserRepository;
+import com.healthcare.model.Appointment;
+import com.healthcare.model.AppointmentDay;
 import com.healthcare.model.AnalyticsPoint;
 import com.healthcare.model.User;
 
@@ -26,6 +31,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = {"/dashboard", "/appointments", "/records", "/admin/users", "/admin/settings",
         "/doctor/records", "/doctor/schedule", "/patient/profile", "/patient/feedback"})
 public class DashboardServlet extends HttpServlet {
+    private static final DateTimeFormatter APPOINTMENT_INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static final int SCHEDULE_DAYS = 7;
+
     private final UserRepository users = new UserRepository();
     private final AppointmentRepository appointments = new AppointmentRepository();
     private final MedicalRecordRepository records = new MedicalRecordRepository();
@@ -35,7 +44,8 @@ public class DashboardServlet extends HttpServlet {
     private final SettingRepository settings = new SettingRepository();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String path = request.getServletPath();
         if (path.equals("/")) {
             User current = currentUser(request);
@@ -48,23 +58,25 @@ public class DashboardServlet extends HttpServlet {
                 case "/dashboard" -> {
                     request.setAttribute("appointments", appointments.listFor(current));
                     if (current.role().equals("ADMIN")) {
-                    List<User> accounts = users.listAll();
-                    request.setAttribute("users", accounts);
-                    request.setAttribute("accountCount", accounts.size());
-                    request.setAttribute("activeDoctorCount", accounts.stream()
-                        .filter(account -> account.role().equals("DOCTOR") && account.active()).count());
-                    request.setAttribute("activePatientCount", accounts.stream()
-                        .filter(account -> account.role().equals("PATIENT") && account.active()).count());
+                        List<User> accounts = users.listAll();
+                        request.setAttribute("users", accounts);
+                        request.setAttribute("accountCount", accounts.size());
+                        request.setAttribute("activeDoctorCount", accounts.stream()
+                                .filter(account -> account.role().equals("DOCTOR") && account.active())
+                                .count());
+                        request.setAttribute("activePatientCount", accounts.stream()
+                                .filter(account -> account.role().equals("PATIENT") && account.active())
+                                .count());
                         request.setAttribute("analytics", appointmentAnalytics(appointments.listFor(current)));
                         request.setAttribute("monthlyAppointments", appointments.monthlyAnalytics());
                         request.setAttribute("monthlyAccounts", users.monthlyRegistrationAnalytics());
                     }
                     if (current.role().equals("DOCTOR")) {
-                    request.setAttribute("records", records.listFor(current));
+                        request.setAttribute("records", records.listFor(current));
                         long feedbackCount = feedback.countFor(current.id());
                         request.setAttribute("feedbackCount", feedbackCount);
                         request.setAttribute("averageRating", feedbackCount == 0 ? "--"
-                                : String.format(java.util.Locale.ROOT, "%.1f", feedback.averageFor(current.id())));
+                                : String.format(Locale.ROOT, "%.1f", feedback.averageFor(current.id())));
                         request.setAttribute("feedbackItems", feedback.listForDoctor(current.id()));
                     }
                     if (current.role().equals("PATIENT")) {
@@ -76,9 +88,13 @@ public class DashboardServlet extends HttpServlet {
                 case "/appointments" -> {
                     request.setAttribute("appointments", appointments.listFor(current));
                     request.setAttribute("minimumAppointmentDateTime", LocalDateTime.now().plusMinutes(1)
-                            .withSecond(0).withNano(0).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+                            .withSecond(0).withNano(0).format(APPOINTMENT_INPUT_FORMAT));
                     if (current.role().equals("PATIENT")) {
                         request.setAttribute("doctors", users.listDoctors());
+                        request.setAttribute("availability", availability.listUpcoming());
+                    } else if (current.role().equals("ADMIN")) {
+                        request.setAttribute("doctors", users.listDoctors());
+                        request.setAttribute("patients", users.listPatients());
                         request.setAttribute("availability", availability.listUpcoming());
                     }
                 }
@@ -105,19 +121,20 @@ public class DashboardServlet extends HttpServlet {
                     requireRole(current, "DOCTOR");
                     request.setAttribute("availability", availability.listFor(current));
                     request.setAttribute("minimumAvailabilityDate", LocalDate.now());
-                    List<com.healthcare.model.Appointment> upcoming = appointments.listFor(current).stream()
-                        .filter(appointment -> appointment.appointmentAt().isAfter(LocalDateTime.now())
-                            && (appointment.status().equals("PENDING") || appointment.status().equals("CONFIRMED")))
-                        .toList();
+                    List<Appointment> upcoming = appointments.listFor(current).stream()
+                            .filter(appointment -> appointment.appointmentAt().isAfter(LocalDateTime.now())
+                                    && (appointment.status().equals("PENDING")
+                                            || appointment.status().equals("CONFIRMED")))
+                            .toList();
                     LocalDate today = LocalDate.now();
-                    List<com.healthcare.model.AppointmentDay> appointmentDays = new ArrayList<>();
-                    for (int offset = 0; offset < 7; offset++) {
-                    LocalDate date = today.plusDays(offset);
-                    List<com.healthcare.model.Appointment> dayAppointments = upcoming.stream()
-                        .filter(appointment -> appointment.appointmentAt().toLocalDate().equals(date))
-                        .sorted(java.util.Comparator.comparing(com.healthcare.model.Appointment::appointmentAt))
-                        .toList();
-                    appointmentDays.add(new com.healthcare.model.AppointmentDay(date, dayAppointments));
+                    List<AppointmentDay> appointmentDays = new ArrayList<>();
+                    for (int offset = 0; offset < SCHEDULE_DAYS; offset++) {
+                        LocalDate date = today.plusDays(offset);
+                        List<Appointment> dayAppointments = upcoming.stream()
+                                .filter(appointment -> appointment.appointmentAt().toLocalDate().equals(date))
+                                .sorted(Comparator.comparing(Appointment::appointmentAt))
+                                .toList();
+                        appointmentDays.add(new AppointmentDay(date, dayAppointments));
                     }
                     request.setAttribute("appointmentDays", appointmentDays);
                 }

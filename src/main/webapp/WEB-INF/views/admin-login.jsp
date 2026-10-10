@@ -9,15 +9,24 @@
     <title>Administrator access | Carepoint</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="${ctx}/assets/app.css">
     <link rel="stylesheet" href="${ctx}/assets/admin-login.css">
+    <link rel="stylesheet" href="${ctx}/assets/readability.css">
 </head>
 <body class="admin-login-body">
 <header class="admin-login-header">
-    <a class="brand" href="${ctx}/" aria-label="Carepoint home"><span class="brand-mark">C</span><span>carepoint</span></a>
-    <span class="admin-login-label"><span class="eyebrow-dot"></span>PRIVATE ADMINISTRATION</span>
-    <a class="admin-general-link" href="${ctx}/login">General sign in <span aria-hidden="true">&#8594;</span></a>
+    <a class="brand" href="${ctx}/" aria-label="Carepoint home">
+        <span class="brand-mark">C</span>
+        <span>carepoint</span>
+    </a>
+    <span class="admin-login-label">
+        <span class="eyebrow-dot"></span>PRIVATE ADMINISTRATION
+    </span>
+    <a class="admin-general-link" href="${ctx}/login">
+        General sign in <span aria-hidden="true">&#8594;</span>
+    </a>
 </header>
 <main class="admin-login-main">
     <section class="admin-login-intro">
@@ -30,16 +39,32 @@
             <div><span>03</span><strong>Clinic settings</strong></div>
         </div>
     </section>
+
     <section class="admin-login-panel" aria-labelledby="admin-login-title">
-        <div class="eyebrow admin-login-kicker"><span class="eyebrow-dot"></span>ADMINISTRATOR ACCESS</div>
+        <div class="eyebrow admin-login-kicker">
+            <span class="eyebrow-dot"></span>ADMINISTRATOR ACCESS
+        </div>
         <h2 id="admin-login-title">Sign in to operations</h2>
         <p class="admin-login-description">This portal is for active administrator accounts.</p>
-        <c:if test="${not empty error}"><div class="notice notice-error" role="alert"><c:out value="${error}" /></div></c:if>
+        <c:if test="${not empty error}">
+            <div class="notice notice-error" role="alert"><c:out value="${error}" /></div>
+        </c:if>
         <form class="form-stack admin-login-form" method="post" action="${ctx}/admin/login">
-            <input type="hidden" name="csrfToken" value="<c:out value='${sessionScope.csrfToken}' />">
-            <label>Administrator email<input name="email" type="email" autocomplete="username" required maxlength="190" placeholder="admin@carepoint.local"></label>
-            <label>Password<input name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Your administrator password"></label>
-            <button class="button button-primary button-wide" type="submit">Enter admin workspace <span aria-hidden="true">&#8594;</span></button>
+            <input type="hidden" name="csrfToken"
+                   value="<c:out value='${sessionScope.csrfToken}' />">
+            <label>
+                Administrator email
+                <input name="email" type="email" autocomplete="username" required
+                       maxlength="190" placeholder="admin@carepoint.local">
+            </label>
+            <label>
+                Password
+                <input name="password" type="password" autocomplete="current-password"
+                       required minlength="8" placeholder="Your administrator password">
+            </label>
+            <button class="button button-primary button-wide" type="submit">
+                Enter admin workspace <span aria-hidden="true">&#8594;</span>
+            </button>
         </form>
         <p class="admin-login-note">Sign-in requires an active account with the ADMIN role.</p>
     </section>

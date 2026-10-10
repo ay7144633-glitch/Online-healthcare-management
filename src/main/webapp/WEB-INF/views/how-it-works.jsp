@@ -1,7 +1,87 @@
 <%@ include file="public-head.jspf" %>
 <main class="public-page public-page-how">
-    <header class="public-page-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>HOW IT WORKS</div><h1>Care coordination, made clear.</h1><p>Carepoint connects account setup, doctor availability, patient appointments and visit documentation in one straightforward flow.</p></header>
-    <section class="public-page-details" aria-labelledby="steps-heading"><div class="public-page-section-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>FROM SETUP TO FOLLOW-UP</div><h2 id="steps-heading">Three roles. One connected journey.</h2></div><ol class="home-detail-list"><li><span>01</span><div><strong>Set up the clinic</strong><p>An administrator configures clinic settings, creates accounts and sets appointment duration.</p></div></li><li><span>02</span><div><strong>Publish availability</strong><p>Doctors add open future windows. Patients can request times only within those windows.</p></div></li><li><span>03</span><div><strong>Request and coordinate a visit</strong><p>The patient sends a request; doctor or admin confirms it. Eligible bookings can be rescheduled when another open time fits.</p></div></li><li><span>04</span><div><strong>Document and follow up</strong><p>Doctors add visit notes. Patients read those records, maintain separate personal history and share feedback after completion.</p></div></li></ol><div class="public-page-next"><a href="${ctx}/for-patients">Explore the patient experience <span aria-hidden="true">&#8594;</span></a><a href="${ctx}/for-doctors">Explore the doctor workspace <span aria-hidden="true">&#8594;</span></a><a href="${ctx}/for-clinics">Explore clinic operations <span aria-hidden="true">&#8594;</span></a></div></section>
-    <section class="public-info-band public-info-green"><div class="public-info-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>INFORMATION FLOW</div><h2>One visit, distinct responsibilities.</h2></div><div class="public-info-grid"><article><span>PATIENT</span><h3>Requests and follows</h3><p>Patients choose open times, track status, maintain personal history and review notes shared by doctors.</p></article><article><span>DOCTOR</span><h3>Schedules and documents</h3><p>Doctors publish availability, coordinate appointments and author clinical visit notes.</p></article><article><span>ADMIN</span><h3>Coordinates the clinic</h3><p>Administrators manage accounts and settings, and oversee scheduling activity and trends.</p></article></div></section>
+    <header class="public-page-heading">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>HOW IT WORKS</div>
+        <h1>Care coordination, made clear.</h1>
+        <p>
+            Carepoint connects account setup, doctor availability, patient appointments and visit
+            documentation in one straightforward flow.
+        </p>
+    </header>
+
+    <section class="public-page-details" aria-labelledby="steps-heading">
+        <div class="public-page-section-heading">
+            <div class="eyebrow"><span class="eyebrow-dot"></span>FROM SETUP TO FOLLOW-UP</div>
+            <h2 id="steps-heading">Three roles. One connected journey.</h2>
+        </div>
+        <ol class="home-detail-list">
+            <li>
+                <span>01</span>
+                <div>
+                    <strong>Set up the clinic</strong>
+                    <p>An administrator configures clinic settings, creates accounts and sets appointment duration.</p>
+                </div>
+            </li>
+            <li>
+                <span>02</span>
+                <div>
+                    <strong>Publish availability</strong>
+                    <p>Doctors add open future windows. Patients can request times only within those windows.</p>
+                </div>
+            </li>
+            <li>
+                <span>03</span>
+                <div>
+                    <strong>Request and coordinate a visit</strong>
+                    <p>
+                        The patient sends a request; doctor or admin confirms it. Eligible bookings
+                        can be rescheduled when another open time fits.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span>04</span>
+                <div>
+                    <strong>Document and follow up</strong>
+                    <p>
+                        Doctors add visit notes. Patients read those records, maintain separate
+                        personal history and share feedback after completion.
+                    </p>
+                </div>
+            </li>
+        </ol>
+        <div class="public-page-next">
+            <a href="${ctx}/for-patients">Explore the patient experience <span aria-hidden="true">&#8594;</span></a>
+            <a href="${ctx}/for-doctors">Explore the doctor workspace <span aria-hidden="true">&#8594;</span></a>
+            <a href="${ctx}/for-clinics">Explore clinic operations <span aria-hidden="true">&#8594;</span></a>
+        </div>
+    </section>
+
+    <section class="public-info-band public-info-green">
+        <div class="public-info-heading">
+            <div class="eyebrow"><span class="eyebrow-dot"></span>INFORMATION FLOW</div>
+            <h2>One visit, distinct responsibilities.</h2>
+        </div>
+        <div class="public-info-grid">
+            <article>
+                <span>PATIENT</span>
+                <h3>Requests and follows</h3>
+                <p>
+                    Patients choose open times, track status, maintain personal history and review
+                    notes shared by doctors.
+                </p>
+            </article>
+            <article>
+                <span>DOCTOR</span>
+                <h3>Schedules and documents</h3>
+                <p>Doctors publish availability, coordinate appointments and author clinical visit notes.</p>
+            </article>
+            <article>
+                <span>ADMIN</span>
+                <h3>Coordinates the clinic</h3>
+                <p>Administrators manage accounts and settings, and oversee scheduling activity and trends.</p>
+            </article>
+        </div>
+    </section>
 </main>
 <%@ include file="public-footer.jspf" %>

@@ -17,7 +17,9 @@ public class DatabaseListener implements ServletContextListener {
             Database.initialize();
             String adminEmail = System.getenv("BOOTSTRAP_ADMIN_EMAIL");
             String adminPassword = System.getenv("BOOTSTRAP_ADMIN_PASSWORD");
-            if (adminEmail != null && !adminEmail.isBlank() && adminPassword != null && adminPassword.length() >= 8) {
+            boolean hasBootstrapCredentials = adminEmail != null && !adminEmail.isBlank()
+                    && adminPassword != null && adminPassword.length() >= 8;
+            if (hasBootstrapCredentials) {
                 UserRepository users = new UserRepository();
                 if (!users.existsByEmail(adminEmail)) {
                     users.createUser("System Administrator", adminEmail, adminPassword, "ADMIN", null);
@@ -25,7 +27,9 @@ public class DatabaseListener implements ServletContextListener {
             }
             event.getServletContext().log("Healthcare database initialized.");
         } catch (SQLException | IllegalStateException exception) {
-            event.getServletContext().setAttribute("databaseError", "Database is unavailable. Check MySQL and the DB_* settings.");
+            event.getServletContext().setAttribute(
+                    "databaseError",
+                    "Database is unavailable. Check MySQL and the DB_* settings.");
             event.getServletContext().log("Healthcare database initialization failed.", exception);
         }
     }

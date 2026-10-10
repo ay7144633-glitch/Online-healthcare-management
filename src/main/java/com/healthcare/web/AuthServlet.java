@@ -13,12 +13,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet(urlPatterns = {"/login", "/doctor/login", "/admin/login", "/register", "/logout"})
+@WebServlet(urlPatterns = {
+        "/login",
+        "/doctor/login",
+        "/admin/login",
+        "/register",
+        "/logout"
+})
 public class AuthServlet extends HttpServlet {
     private final UserRepository users = new UserRepository();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String path = request.getServletPath();
         if (path.equals("/logout")) {
             HttpSession session = request.getSession(false);
@@ -34,12 +41,12 @@ public class AuthServlet extends HttpServlet {
         request.setAttribute("doctorMode", doctorMode);
         request.setAttribute("adminMode", adminMode);
         String view = doctorMode ? "doctor-login" : adminMode ? "admin-login" : "auth";
-        request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp")
-            .forward(request, response);
+        forwardToView(request, response, view);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String path = request.getServletPath();
         try {
@@ -47,8 +54,8 @@ public class AuthServlet extends HttpServlet {
                 String name = value(request, "fullName");
                 String email = value(request, "email");
                 String password = value(request, "password");
-                if (name.length() < 2 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$") || password.length() < 8) {
-                        showError(request, response, true, false, false,
+                if (!isValidRegistration(name, email, password)) {
+                    showError(request, response, true, false, false,
                             "Enter a name, valid email, and password with at least 8 characters.");
                     return;
                 }
@@ -57,16 +64,13 @@ public class AuthServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/dashboard");
                 return;
             }
-                if (path.equals("/login") || path.equals("/doctor/login") || path.equals("/admin/login")) {
+            if (isLoginPath(path)) {
                 User user = users.authenticate(value(request, "email"), value(request, "password"));
                 boolean doctorPortal = path.equals("/doctor/login");
                 boolean adminPortal = path.equals("/admin/login");
-                if (user == null || (doctorPortal && !user.role().equals("DOCTOR"))
-                    || (adminPortal && !user.role().equals("ADMIN"))) {
+                if (!canUseLoginPortal(user, doctorPortal, adminPortal)) {
                     showError(request, response, false, doctorPortal, adminPortal,
-                        doctorPortal ? "Doctor sign-in failed. Check your credentials and try again."
-                            : adminPortal ? "Admin sign-in failed. Check your credentials and try again."
-                                : "Email or password is incorrect, or this account is inactive.");
+                            loginErrorMessage(doctorPortal, adminPortal));
                     return;
                 }
                 signIn(request, user);
@@ -76,7 +80,7 @@ public class AuthServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         } catch (SQLException exception) {
             getServletContext().log("Authentication request failed.", exception);
-                    showError(request, response, path.equals("/register"), path.equals("/doctor/login"),
+            showError(request, response, path.equals("/register"), path.equals("/doctor/login"),
                     path.equals("/admin/login"),
                     "Could not access the database. Check MySQL settings and try again.");
         }
@@ -88,16 +92,56 @@ public class AuthServlet extends HttpServlet {
         session.setAttribute("user", user);
     }
 
-        private void showError(HttpServletRequest request, HttpServletResponse response, boolean register,
+    private void showError(HttpServletRequest request, HttpServletResponse response, boolean register,
             boolean doctorMode, boolean adminMode, String message)
             throws ServletException, IOException {
         request.setAttribute("registerMode", register);
         request.setAttribute("doctorMode", doctorMode);
         request.setAttribute("adminMode", adminMode);
         request.setAttribute("error", message);
-        String view = doctorMode ? "doctor-login" : adminMode ? "admin-login" : "auth";
-        request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp")
-            .forward(request, response);
+        String view = loginView(doctorMode, adminMode);
+        forwardToView(request, response, view);
+    }
+
+    private boolean isValidRegistration(String name, String email, String password) {
+        return name.length() >= 2
+                && email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
+                && password.length() >= 8;
+    }
+
+    private boolean isLoginPath(String path) {
+        return path.equals("/login") || path.equals("/doctor/login") || path.equals("/admin/login");
+    }
+
+    private boolean canUseLoginPortal(User user, boolean doctorPortal, boolean adminPortal) {
+        return user != null
+                && (!doctorPortal || user.role().equals("DOCTOR"))
+                && (!adminPortal || user.role().equals("ADMIN"));
+    }
+
+    private String loginErrorMessage(boolean doctorPortal, boolean adminPortal) {
+        if (doctorPortal) {
+            return "Doctor sign-in failed. Check your credentials and try again.";
+        }
+        if (adminPortal) {
+            return "Admin sign-in failed. Check your credentials and try again.";
+        }
+        return "Email or password is incorrect, or this account is inactive.";
+    }
+
+    private String loginView(boolean doctorMode, boolean adminMode) {
+        if (doctorMode) {
+            return "doctor-login";
+        }
+        if (adminMode) {
+            return "admin-login";
+        }
+        return "auth";
+    }
+
+    private void forwardToView(HttpServletRequest request, HttpServletResponse response, String view)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp").forward(request, response);
     }
 
     private String value(HttpServletRequest request, String name) {

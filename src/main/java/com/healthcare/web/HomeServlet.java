@@ -1,7 +1,9 @@
 package com.healthcare.web;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import com.healthcare.data.SettingRepository;
 import com.healthcare.model.User;
 
 import jakarta.servlet.ServletException;
@@ -12,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = {"", "/for-patients", "/for-doctors", "/for-clinics", "/how-it-works"})
 public class HomeServlet extends HttpServlet {
+    private final SettingRepository settings = new SettingRepository();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
@@ -33,6 +37,12 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.setAttribute("currentPage", page);
         request.setAttribute("pageTitle", title);
+        try {
+            request.setAttribute("clinicSettings", settings.getAll());
+        } catch (SQLException exception) {
+            getServletContext().log("Could not load clinic contact settings.", exception);
+            throw new ServletException("Could not load clinic contact settings.", exception);
+        }
         String view = page.equals("home") ? "landing" : page;
         request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp").forward(request, response);
     }

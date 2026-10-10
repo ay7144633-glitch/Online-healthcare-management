@@ -1,0 +1,87 @@
+.button {
+    min-height: 44px;
+    padding-right: 17px;
+    padding-left: 17px;
+    font-size: 14px;
+}
+
+.button-small {
+    min-height: 36px;
+    padding-right: 12px;
+    padding-left: 12px;
+    font-size: 13px;
+}
+
+.nav-link { font-size: 15px; }
+.workspace-label, .eyebrow { font-size: 11px; }
+.crumb, .account-name, .signout-link { font-size: 14px; }
+.page-footer { font-size: 12px; }
+.page-heading p, .panel-heading p, .muted { font-size: 15px; }
+.metric-label, .database-hint strong, .dashboard-action-list strong,
+.dashboard-record-list strong, .analytics-label, .feedback-meta { font-size: 13px; }
+.metric-note, .database-hint span, .dashboard-action-list small,
+.dashboard-record-list article > span:last-child, .record-date { font-size: 12px; }
+.text-link { font-size: 13px; }
+.empty-state { font-size: 14px; }
+.empty-state strong { font-size: 15px; }
+.data-table th { font-size: 12px; }
+.data-table td, .data-table td strong { font-size: 13px; }
+.data-table td small { font-size: 12px; }
+.status { font-size: 11px; }
+.form-grid label, .form-stack label, .form-label { font-size: 13px; }
+input, select, textarea { min-height: 44px; font-size: 14px; }
+.notice, .analytics-count { font-size: 14px; }
+
+.home-primary-nav a { font-size: 15px; }
+.home-nav-actions .home-nav-link { font-size: 14px; }
+.home-nav-cta { min-height: 44px; padding: 0 16px; font-size: 14px; }
+.home-hero-copy .home-subtitle { font-size: 17px; }
+.home-login-action, .home-section-link, .home-how-link a,
+.public-page-next a { font-size: 13px; }
+.home-promise { font-size: 12px; }
+.services-heading > p, .home-overview .home-section-heading > p,
+.home-section-heading > p, .home-audience-copy > p { font-size: 14px; }
+.service-number, .home-overview-links > a > span { font-size: 11px; }
+.service-item h3, .home-overview-links > a strong { font-size: 15px; }
+.service-item p, .home-overview-links > a small,
+.home-steps li p, .home-detail-list li p,
+.public-page .home-detail-list li p { font-size: 14px; }
+.service-item a, .home-footer > a:last-child { font-size: 13px; }
+.home-footer { font-size: 11px; }
+.clinic-contact a { color: var(--green); text-decoration: none; }
+.public-page-heading > p { font-size: 16px; }
+.public-page .home-detail-list strong { font-size: 14px; }
+.public-info-heading > p, .public-info-grid p { font-size: 14px; }
+.public-info-grid article > span { font-size: 11px; }
+.public-info-grid h3 { font-size: 15px; }
+.care-note strong { font-size: 13px; }
+.care-note small { font-size: 12px; }
+.auth-switch { font-size: 13px; line-height: 1.6; }
+.auth-switch a { font-size: 14px; }
+.doctor-login-switch { font-size: 13px; line-height: 1.6; }
+.doctor-login-switch a { font-size: 14px; }
+
+.chat-message { font-size: 13px; }
+.chat-message-link { font-size: 12px; }
+.chat-quick-replies button { min-height: 34px; padding-right: 11px; padding-left: 11px; font-size: 11px; }
+
+@media (max-width: 980px) and (min-width: 701px) {
+    .home-primary-nav a { font-size: 13px; }
+    .home-nav-cta { min-height: 40px; padding-right: 11px; padding-left: 11px; font-size: 13px; }
+    .nav-link { font-size: 14px; }
+}
+
+@media (max-width: 700px) {
+    .button { min-height: 44px; }
+    .home-primary-nav a, .home-nav-actions .home-nav-link { font-size: 13px; }
+    .home-nav-cta { min-height: 38px; padding-right: 12px; padding-left: 12px; font-size: 12px; }
+    .home-login-action { font-size: 13px; }
+    .home-promise { font-size: 12px; }
+    .home-overview-links > a small, .service-item p,
+    .home-steps li p, .home-detail-list li p,
+    .public-page .home-detail-list li p { font-size: 13px; }
+    .nav-link { font-size: 14px; }
+    .page-footer { font-size: 11px; }
+    .public-page-heading > p { font-size: 15px; }
+    .home-footer > .clinic-contact { display: block; flex-basis: 100%; }
+}

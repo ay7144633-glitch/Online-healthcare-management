@@ -39,10 +39,17 @@ public class SecurityFilter implements Filter {
             return;
         }
 
-        boolean publicPath = path.isEmpty() || path.equals("/") || path.equals("/login") || path.equals("/doctor/login")
-            || path.equals("/admin/login") || path.equals("/register")
-            || path.equals("/for-patients") || path.equals("/for-doctors") || path.equals("/for-clinics")
-            || path.equals("/how-it-works") || path.startsWith("/assets/");
+        boolean publicPath = path.isEmpty()
+                || path.equals("/")
+                || path.equals("/login")
+                || path.equals("/doctor/login")
+                || path.equals("/admin/login")
+                || path.equals("/register")
+                || path.equals("/for-patients")
+                || path.equals("/for-doctors")
+                || path.equals("/for-clinics")
+                || path.equals("/how-it-works")
+                || path.startsWith("/assets/");
         User user = (User) session.getAttribute("user");
         if (!publicPath && user == null) {
             response.sendRedirect(request.getContextPath() + "/login");

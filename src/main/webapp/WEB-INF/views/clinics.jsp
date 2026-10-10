@@ -1,7 +1,94 @@
 <%@ include file="public-head.jspf" %>
 <main class="public-page public-page-clinic">
-    <header class="public-page-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>FOR CLINICS</div><h1>A clearer view of clinic operations.</h1><p>Give administrators one place to coordinate people, appointment activity and clinic settings.</p><div class="home-hero-actions"><a class="button button-primary home-primary-action" href="${ctx}/login">Sign in to your clinic workspace <span aria-hidden="true">&#8594;</span></a></div></header>
-    <section class="public-page-details" aria-labelledby="clinic-details-heading"><div class="public-page-section-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>YOUR ADMIN WORKSPACE</div><h2 id="clinic-details-heading">Keep the clinic moving.</h2></div><ol class="home-detail-list"><li><span>01</span><div><strong>Manage people and roles</strong><p>Create doctor accounts, update eligible roles and contact details, and control access.</p></div></li><li><span>02</span><div><strong>Oversee appointments</strong><p>Review clinic-wide visits, update status and reschedule pending or confirmed appointments into open time.</p></div></li><li><span>03</span><div><strong>Configure the clinic</strong><p>Set the clinic name and the default appointment duration used for new patient requests.</p></div></li><li><span>04</span><div><strong>Review activity trends</strong><p>Compare six months of appointment volume and account registrations with current appointment statuses.</p></div></li></ol></section>
-    <section class="public-info-band"><div class="public-info-heading"><div class="eyebrow"><span class="eyebrow-dot"></span>ADMINISTRATOR VIEW</div><h2>One workspace for clinic operations.</h2><p>Operational actions are role-protected; accounts with clinical history are retained rather than hard-deleted.</p></div><div class="public-info-grid"><article><span>ACCESS</span><h3>People and roles</h3><p>Review accounts, update details and deactivate access when needed.</p></article><article><span>SCHEDULING</span><h3>Appointment oversight</h3><p>Monitor visit status across the clinic and reschedule eligible bookings.</p></article><article><span>ACTIVITY</span><h3>Monthly trends</h3><p>Review recent appointment and account-registration counts over time.</p></article></div></section>
+    <header class="public-page-heading">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>FOR CLINICS</div>
+        <h1>A clearer view of clinic operations.</h1>
+        <p>
+            Give administrators one place to coordinate people, appointment activity and clinic
+            settings.
+        </p>
+        <div class="home-hero-actions">
+            <a class="button button-primary home-primary-action" href="${ctx}/login">
+                Sign in to your clinic workspace <span aria-hidden="true">&#8594;</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="public-page-details" aria-labelledby="clinic-details-heading">
+        <div class="public-page-section-heading">
+            <div class="eyebrow"><span class="eyebrow-dot"></span>YOUR ADMIN WORKSPACE</div>
+            <h2 id="clinic-details-heading">Keep the clinic moving.</h2>
+        </div>
+        <ol class="home-detail-list">
+            <li>
+                <span>01</span>
+                <div>
+                    <strong>Manage people and roles</strong>
+                    <p>
+                        Create doctor accounts, update eligible roles and contact details, and
+                        control access.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span>02</span>
+                <div>
+                    <strong>Oversee appointments</strong>
+                    <p>
+                        Review clinic-wide visits, update status and reschedule pending or
+                        confirmed appointments into open time.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span>03</span>
+                <div>
+                    <strong>Configure the clinic</strong>
+                    <p>
+                        Set the clinic name and the default appointment duration used for new
+                        patient requests.
+                    </p>
+                </div>
+            </li>
+            <li>
+                <span>04</span>
+                <div>
+                    <strong>Review activity trends</strong>
+                    <p>
+                        Compare six months of appointment volume and account registrations with
+                        current appointment statuses.
+                    </p>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="public-info-band">
+        <div class="public-info-heading">
+            <div class="eyebrow"><span class="eyebrow-dot"></span>ADMINISTRATOR VIEW</div>
+            <h2>One workspace for clinic operations.</h2>
+            <p>
+                Operational actions are role-protected; accounts with clinical history are
+                retained rather than hard-deleted.
+            </p>
+        </div>
+        <div class="public-info-grid">
+            <article>
+                <span>ACCESS</span>
+                <h3>People and roles</h3>
+                <p>Review accounts, update details and deactivate access when needed.</p>
+            </article>
+            <article>
+                <span>SCHEDULING</span>
+                <h3>Appointment oversight</h3>
+                <p>Monitor visit status across the clinic and reschedule eligible bookings.</p>
+            </article>
+            <article>
+                <span>ACTIVITY</span>
+                <h3>Monthly trends</h3>
+                <p>Review recent appointment and account-registration counts over time.</p>
+            </article>
+        </div>
+    </section>
 </main>
 <%@ include file="public-footer.jspf" %>

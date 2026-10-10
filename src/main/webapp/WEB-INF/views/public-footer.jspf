@@ -1,15 +1,67 @@
-<footer class="home-footer"><a class="brand" href="${ctx}/"><span class="brand-mark">C</span><span>carepoint</span></a><span>Care, thoughtfully coordinated.</span><a href="${ctx}/login">Sign in <span aria-hidden="true">&#8594;</span></a></footer>
+<footer class="home-footer">
+    <a class="brand" href="${ctx}/">
+        <span class="brand-mark">C</span>
+        <span><c:out value="${clinicSettings.clinic_name}" /></span>
+    </a>
+    <span>Care, thoughtfully coordinated.</span>
+    <span class="clinic-contact">
+        <c:if test="${not empty clinicSettings.clinic_email}">
+            <a href="mailto:${fn:escapeXml(clinicSettings.clinic_email)}">
+                <c:out value="${clinicSettings.clinic_email}" />
+            </a>
+        </c:if>
+        <c:if test="${not empty clinicSettings.clinic_phone}">
+            <c:out value="${clinicSettings.clinic_phone}" />
+        </c:if>
+        <c:if test="${not empty clinicSettings.clinic_address}">
+            <c:out value="${clinicSettings.clinic_address}" />
+        </c:if>
+    </span>
+    <a href="${ctx}/login">Sign in <span aria-hidden="true">&#8594;</span></a>
+</footer>
+
 <c:set var="chatBookingUrl" value="${empty user ? '/register' : '/appointments'}" />
 <c:set var="chatRecordsUrl" value="${empty user ? '/login' : '/records'}" />
 <aside class="care-chat" id="care-chat" aria-label="Carepoint help assistant">
-    <section class="chat-panel" id="chat-panel" aria-labelledby="chat-title" data-book-url="${ctx}${chatBookingUrl}" data-login-url="${ctx}/login" data-records-url="${ctx}${chatRecordsUrl}" hidden>
-        <header class="chat-header"><span class="chat-brand-mark" aria-hidden="true">C</span><span class="chat-heading"><strong id="chat-title">Carepoint assistant</strong><small><span class="chat-online-dot"></span>Here to help</small></span><button class="chat-close" id="chat-close" type="button" aria-label="Close chat">&#215;</button></header>
-        <div class="chat-messages" id="chat-messages" aria-live="polite"><p class="chat-message chat-bot-message">Hi, I can help you find your way around Carepoint. What do you need?</p></div>
-        <div class="chat-quick-replies" aria-label="Common questions"><button type="button" data-question="How do I book an appointment?">Book a visit</button><button type="button" data-question="How do I sign in?">Sign-in help</button><button type="button" data-question="Where can I find my records?">My records</button></div>
-        <form class="chat-form" id="chat-form"><label class="visually-hidden" for="chat-input">Ask Carepoint a question</label><input id="chat-input" name="question" maxlength="240" autocomplete="off" placeholder="Ask a question..." required><button type="submit" aria-label="Send question">&#8594;</button></form>
-        <p class="chat-disclaimer">For medical concerns, contact your care team. This assistant does not provide medical advice.</p>
+    <section class="chat-panel" id="chat-panel" aria-labelledby="chat-title"
+             data-book-url="${ctx}${chatBookingUrl}"
+             data-login-url="${ctx}/login"
+             data-records-url="${ctx}${chatRecordsUrl}" hidden>
+        <header class="chat-header">
+            <span class="chat-brand-mark" aria-hidden="true">C</span>
+            <span class="chat-heading">
+                <strong id="chat-title">Carepoint assistant</strong>
+                <small><span class="chat-online-dot"></span>Here to help</small>
+            </span>
+            <button class="chat-close" id="chat-close" type="button"
+                    aria-label="Close chat">&#215;</button>
+        </header>
+        <div class="chat-messages" id="chat-messages" aria-live="polite">
+            <p class="chat-message chat-bot-message">
+                Hi, I can help you find your way around Carepoint. What do you need?
+            </p>
+        </div>
+        <div class="chat-quick-replies" aria-label="Common questions">
+            <button type="button" data-question="How do I book an appointment?">Book a visit</button>
+            <button type="button" data-question="How do I sign in?">Sign-in help</button>
+            <button type="button" data-question="Where can I find my records?">My records</button>
+        </div>
+        <form class="chat-form" id="chat-form">
+            <label class="visually-hidden" for="chat-input">Ask Carepoint a question</label>
+            <input id="chat-input" name="question" maxlength="240" autocomplete="off"
+                   placeholder="Ask a question..." required>
+            <button type="submit" aria-label="Send question">&#8594;</button>
+        </form>
+        <p class="chat-disclaimer">
+            For medical concerns, contact your care team. This assistant does not provide medical advice.
+        </p>
     </section>
-    <button class="chat-launcher" id="chat-launcher" type="button" aria-label="Open Carepoint help" aria-controls="chat-panel" aria-expanded="false" title="Chat with Carepoint"><span class="chat-bubble-icon" aria-hidden="true"></span><span class="chat-launcher-label">Help</span></button>
+    <button class="chat-launcher" id="chat-launcher" type="button"
+            aria-label="Open Carepoint help" aria-controls="chat-panel"
+            aria-expanded="false" title="Chat with Carepoint">
+        <span class="chat-bubble-icon" aria-hidden="true"></span>
+        <span class="chat-launcher-label">Help</span>
+    </button>
 </aside>
 <script src="${ctx}/assets/home.js" defer></script>
 </body>

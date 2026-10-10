@@ -76,12 +76,15 @@ public class AppointmentRepository {
     }
 
     public void book(long patientId, long doctorId, LocalDateTime appointmentAt, String reason, int durationMinutes) throws SQLException {
-        if (!appointmentAt.isAfter(LocalDateTime.now()) || durationMinutes < 10 || durationMinutes > 180) {
-            throw new IllegalArgumentException("Choose a future appointment time.");
+        if (appointmentAt == null || !appointmentAt.isAfter(LocalDateTime.now())
+                || durationMinutes < 10 || durationMinutes > 180
+                || reason == null || reason.isBlank() || reason.length() > 500) {
+            throw new IllegalArgumentException("Enter a reason and choose a valid future appointment time.");
         }
         LocalDateTime appointmentEnd = appointmentAt.plusMinutes(durationMinutes);
         String sql = "INSERT INTO appointments (patient_id, doctor_id, appointment_at, duration_minutes, reason) "
                 + "SELECT ?, d.id, ?, ?, ? FROM users d WHERE d.id = ? AND d.role = 'DOCTOR' AND d.active = TRUE "
+                + "AND EXISTS (SELECT 1 FROM users p WHERE p.id = ? AND p.role = 'PATIENT' AND p.active = TRUE) "
             // Require a published window and reject conflicting appointments for this clinician.
                 + "AND EXISTS (SELECT 1 FROM doctor_availability v WHERE v.doctor_id = d.id AND ? >= v.available_from AND ? <= v.available_to) "
                 + "AND NOT EXISTS (SELECT 1 FROM appointments a WHERE a.doctor_id = d.id AND a.status <> 'CANCELLED' "
@@ -92,12 +95,13 @@ public class AppointmentRepository {
             statement.setInt(3, durationMinutes);
             statement.setString(4, reason.trim());
             statement.setLong(5, doctorId);
-            statement.setTimestamp(6, Timestamp.valueOf(appointmentAt));
-            statement.setTimestamp(7, Timestamp.valueOf(appointmentEnd));
+            statement.setLong(6, patientId);
+            statement.setTimestamp(7, Timestamp.valueOf(appointmentAt));
             statement.setTimestamp(8, Timestamp.valueOf(appointmentEnd));
-            statement.setTimestamp(9, Timestamp.valueOf(appointmentAt));
+            statement.setTimestamp(9, Timestamp.valueOf(appointmentEnd));
+            statement.setTimestamp(10, Timestamp.valueOf(appointmentAt));
             if (statement.executeUpdate() != 1) {
-                throw new IllegalArgumentException("Choose an open time inside the doctor's published availability.");
+                throw new IllegalArgumentException("Choose an active patient and an open time inside the doctor's published availability.");
             }
         }
     }

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +28,7 @@ class AppointmentInteractionIntegrationTest {
     private final AppointmentRepository appointments = new AppointmentRepository();
     private final MedicalRecordRepository records = new MedicalRecordRepository();
     private final PatientHistoryRepository patientHistory = new PatientHistoryRepository();
+    private final SettingRepository settings = new SettingRepository();
 
     @Test
     void patientBookingAppearsForDoctorAndDoctorConfirmationAppearsForPatient() throws SQLException {
@@ -77,6 +79,19 @@ class AppointmentInteractionIntegrationTest {
                         .filter(appointment -> appointment.id() == booked.id())
                         .findFirst().orElseThrow().appointmentAt());
 
+            appointments.book(patient.id(), doctor.id(), appointmentAt.plusHours(4),
+                            "Administrator scheduled visit", 30);
+            Appointment adminScheduled = appointments.listFor(deletableAdmin).stream()
+                            .filter(appointment -> appointment.reason().equals("Administrator scheduled visit"))
+                            .findFirst().orElseThrow();
+            assertTrue(appointments.listFor(patient).stream()
+                            .anyMatch(appointment -> appointment.reason().equals("Administrator scheduled visit")));
+            LocalDateTime adminRescheduledAt = appointmentAt.plusHours(4).plusMinutes(30);
+            appointments.reschedule(deletableAdmin, adminScheduled.id(), adminRescheduledAt);
+            assertEquals(adminRescheduledAt, appointments.listFor(patient).stream()
+                            .filter(appointment -> appointment.id() == adminScheduled.id())
+                            .findFirst().orElseThrow().appointmentAt());
+
                 records.add(doctor, booked.id(), "Initial diagnosis", "Initial visit note");
                 MedicalRecord record = records.listFor(doctor).stream()
                     .filter(item -> item.diagnosis().equals("Initial diagnosis"))
@@ -124,6 +139,26 @@ class AppointmentInteractionIntegrationTest {
                     assertTrue(users.monthlyRegistrationAnalytics().stream().mapToLong(point -> point.count()).sum() >= 2);
         } finally {
                 deleteTestData(patientEmail, doctorEmail, deletableEmail, deletableAdminEmail);
+        }
+    }
+
+    @Test
+    void clinicSettingsPersistAndRestoreThroughJdbc() throws SQLException {
+        Database.initialize();
+        Map<String, String> original = settings.getAll();
+        try {
+            settings.save("Integration Clinic", 45, "contact@integration.local",
+                    "+1 555 0100", "1 Test Street");
+
+            Map<String, String> saved = settings.getAll();
+            assertEquals("Integration Clinic", saved.get("clinic_name"));
+            assertEquals("45", saved.get("appointment_duration"));
+            assertEquals("contact@integration.local", saved.get("clinic_email"));
+            assertEquals("+1 555 0100", saved.get("clinic_phone"));
+            assertEquals("1 Test Street", saved.get("clinic_address"));
+        } finally {
+            settings.save(original.get("clinic_name"), Integer.parseInt(original.get("appointment_duration")),
+                    original.get("clinic_email"), original.get("clinic_phone"), original.get("clinic_address"));
         }
     }
 
