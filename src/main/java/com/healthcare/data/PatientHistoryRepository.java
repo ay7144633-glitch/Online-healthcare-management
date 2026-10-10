@@ -10,7 +10,9 @@ import java.util.List;
 import com.healthcare.model.PatientHistoryEntry;
 import com.healthcare.model.User;
 
+/** Manages personal health-history entries entered by patients. */
 public class PatientHistoryRepository {
+    /** Lists health-history entries owned by the specified patient. */
     public List<PatientHistoryEntry> listFor(User patient) throws SQLException {
         String sql = "SELECT id, title, details, updated_at FROM patient_health_history "
                 + "WHERE patient_id = ? ORDER BY updated_at DESC";
@@ -28,6 +30,7 @@ public class PatientHistoryRepository {
         return entries;
     }
 
+    /** Adds a validated health-history entry for the patient. */
     public void add(User patient, String title, String details) throws SQLException {
         validate(title, details);
         String sql = "INSERT INTO patient_health_history (patient_id, title, details) VALUES (?, ?, ?)";
@@ -39,6 +42,7 @@ public class PatientHistoryRepository {
         }
     }
 
+    /** Updates a history entry only when it belongs to the specified patient. */
     public void update(User patient, long entryId, String title, String details) throws SQLException {
         validate(title, details);
         String sql = "UPDATE patient_health_history SET title = ?, details = ? WHERE id = ? AND patient_id = ?";
@@ -53,6 +57,7 @@ public class PatientHistoryRepository {
         }
     }
 
+    /** Deletes a history entry only when it belongs to the specified patient. */
     public void delete(User patient, long entryId) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement(
@@ -65,6 +70,7 @@ public class PatientHistoryRepository {
         }
     }
 
+    /** Rejects history entries with missing or excessively long text. */
     private void validate(String title, String details) {
         if (title.isBlank() || title.length() > 160 || details.isBlank() || details.length() > 5000) {
             throw new IllegalArgumentException("Enter a title and details (up to 5,000 characters).");

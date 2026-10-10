@@ -13,7 +13,9 @@ import java.util.List;
 import com.healthcare.model.Availability;
 import com.healthcare.model.User;
 
+/** Persists doctors' available time windows and provides them for schedule views. */
 public class AvailabilityRepository {
+    /** Lists all availability windows published by one doctor. */
     public List<Availability> listFor(User doctor) throws SQLException {
         String sql = "SELECT id, available_from, available_to, NULL AS doctor_name, NULL AS specialty "
             + "FROM doctor_availability WHERE doctor_id = ? ORDER BY available_from";
@@ -29,6 +31,7 @@ public class AvailabilityRepository {
         return blocks;
     }
 
+    /** Lists future availability windows for active doctors for booking forms. */
     public List<Availability> listUpcoming() throws SQLException {
         String sql = "SELECT a.id, a.available_from, a.available_to, u.full_name AS doctor_name, u.specialty "
                 + "FROM doctor_availability a JOIN users u ON u.id = a.doctor_id "
@@ -44,8 +47,10 @@ public class AvailabilityRepository {
         return blocks;
     }
 
+    /** Publishes a future availability window after enforcing its allowed duration. */
     public void add(User doctor, LocalDateTime from, LocalDateTime to) throws SQLException {
         long minutes = Duration.between(from, to).toMinutes();
+        // Enforce these limits in the repository as well as the form so non-UI requests follow the same rules.
         if (!from.isAfter(LocalDateTime.now()) || minutes < 30 || minutes > 720) {
             throw new IllegalArgumentException("Availability must start in the future and last between 30 minutes and 12 hours.");
         }
@@ -58,6 +63,7 @@ public class AvailabilityRepository {
         }
     }
 
+    /** Deletes an availability window only when it belongs to the specified doctor. */
     public void delete(User doctor, long availabilityId) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement("DELETE FROM doctor_availability WHERE id = ? AND doctor_id = ?")) {
@@ -69,6 +75,7 @@ public class AvailabilityRepository {
         }
     }
 
+    /** Converts the current database row into an availability model. */
     private Availability mapAvailability(ResultSet results) throws SQLException {
         return new Availability(results.getLong("id"), results.getTimestamp("available_from").toLocalDateTime(),
                 results.getTimestamp("available_to").toLocalDateTime(), results.getString("doctor_name"),

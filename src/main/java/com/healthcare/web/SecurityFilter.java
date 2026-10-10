@@ -15,8 +15,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/** Adds response protections, validates CSRF tokens, and requires sign-in for private routes. */
 @WebFilter("/*")
 public class SecurityFilter implements Filter {
+    /** Applies common request security checks before handing control to a servlet. */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
@@ -32,7 +34,7 @@ public class SecurityFilter implements Filter {
         if (session.getAttribute("csrfToken") == null) {
             session.setAttribute("csrfToken", UUID.randomUUID().toString());
         }
-        // Require a session token on every state-changing browser request.
+        // Binding POST requests to this session prevents another site from forging an action as the signed-in user.
         if (request.getMethod().equalsIgnoreCase("POST")
                 && !session.getAttribute("csrfToken").equals(request.getParameter("csrfToken"))) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Request validation failed.");

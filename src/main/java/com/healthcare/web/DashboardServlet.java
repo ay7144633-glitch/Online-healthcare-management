@@ -28,6 +28,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/** Loads role-specific workspace data and forwards requests to the matching JSP view. */
 @WebServlet(urlPatterns = {"/dashboard", "/appointments", "/records", "/admin/users", "/admin/settings",
         "/doctor/records", "/doctor/schedule", "/patient/profile", "/patient/feedback"})
 public class DashboardServlet extends HttpServlet {
@@ -43,6 +44,7 @@ public class DashboardServlet extends HttpServlet {
     private final AvailabilityRepository availability = new AvailabilityRepository();
     private final SettingRepository settings = new SettingRepository();
 
+    /** Loads data for the requested workspace page and enforces page-level role access. */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -202,16 +204,19 @@ public class DashboardServlet extends HttpServlet {
         }
     }
 
+    /** Returns the user saved in the current session, or null when no user is signed in. */
     private User currentUser(HttpServletRequest request) {
         return (User) request.getSession().getAttribute("user");
     }
 
+    /** Stops page processing unless the current user's role matches the required role. */
     private void requireRole(User user, String role) {
         if (!user.role().equals(role)) {
             throw new SecurityException("Role not permitted.");
         }
     }
 
+    /** Stops page processing unless the current user's role is in the allowed set. */
     private void requireOneOf(User user, String... roles) {
         for (String role : roles) {
             if (user.role().equals(role)) {
@@ -221,6 +226,7 @@ public class DashboardServlet extends HttpServlet {
         throw new SecurityException("Role not permitted.");
     }
 
+    /** Builds chart points for appointment statuses and their share of the largest status count. */
     private List<AnalyticsPoint> appointmentAnalytics(List<com.healthcare.model.Appointment> appointments) {
         String[] statuses = {"PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"};
         List<Long> counts = new ArrayList<>();

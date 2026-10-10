@@ -10,7 +10,9 @@ import java.util.List;
 import com.healthcare.model.MedicalRecord;
 import com.healthcare.model.User;
 
+/** Reads and updates clinician-authored notes associated with patients and appointments. */
 public class MedicalRecordRepository {
+    /** Lists medical records visible to the supplied patient or doctor. */
     public List<MedicalRecord> listFor(User user) throws SQLException {
         String scope = switch (user.role()) {
             case "PATIENT" -> " WHERE r.patient_id = ?";
@@ -37,6 +39,7 @@ public class MedicalRecordRepository {
         return records;
     }
 
+    /** Adds a visit note for an appointment managed by the specified doctor. */
     public void add(User doctor, long appointmentId, String diagnosis, String notes) throws SQLException {
         String sql = "INSERT INTO medical_records (appointment_id, patient_id, doctor_id, diagnosis, notes) "
                 + "SELECT a.id, a.patient_id, a.doctor_id, ?, ? FROM appointments a "
@@ -52,6 +55,7 @@ public class MedicalRecordRepository {
         }
     }
 
+    /** Updates a medical record only when it belongs to the specified doctor. */
     public void update(User doctor, long recordId, String diagnosis, String notes) throws SQLException {
         String sql = "UPDATE medical_records SET diagnosis = ?, notes = ? WHERE id = ? AND doctor_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {

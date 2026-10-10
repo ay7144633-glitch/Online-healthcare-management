@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/** Handles authenticated POST actions for appointments, accounts, records, and clinic settings. */
 @WebServlet("/actions/*")
 public class ActionServlet extends HttpServlet {
     private final UserRepository users = new UserRepository();
@@ -32,6 +33,7 @@ public class ActionServlet extends HttpServlet {
     private final FeedbackRepository feedback = new FeedbackRepository();
     private final SettingRepository settings = new SettingRepository();
 
+    /** Validates and dispatches a submitted action, then redirects with a result message. */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -237,8 +239,10 @@ public class ActionServlet extends HttpServlet {
         }
     }
 
+    /** Returns a safe local return path, or the supplied fallback for invalid destinations. */
     private String safeDestination(HttpServletRequest request, String fallback) {
         String destination = request.getParameter("returnTo");
+        // Accept only local paths to prevent a crafted form from redirecting users to an external site.
         if (destination == null || !destination.startsWith("/") || destination.startsWith("//")
                 || destination.contains("\\") || destination.contains("..")) {
             return fallback;
@@ -246,15 +250,18 @@ public class ActionServlet extends HttpServlet {
         return destination;
     }
 
+    /** Reads a trimmed request parameter, using an empty string when it is missing. */
     private String value(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
         return value == null ? "" : value.trim();
     }
 
+    /** Parses a required numeric request parameter. */
     private long number(HttpServletRequest request, String name) {
         return Long.parseLong(value(request, name));
     }
 
+    /** Parses the submitted appointment date and reports invalid values as user input errors. */
     private LocalDateTime appointmentDateTime(HttpServletRequest request) {
         try {
             return LocalDateTime.parse(value(request, "appointmentAt"));
@@ -263,12 +270,14 @@ public class ActionServlet extends HttpServlet {
         }
     }
 
+    /** Stops the action unless the current user has the required role. */
     private void requireRole(User user, String role) {
         if (!user.role().equals(role)) {
             throw new SecurityException("Role not permitted.");
         }
     }
 
+    /** Stops the action unless the current user's role is in the allowed set. */
     private void requireOneOf(User user, String... roles) {
         for (String role : roles) {
             if (user.role().equals(role)) {
@@ -278,6 +287,7 @@ public class ActionServlet extends HttpServlet {
         throw new SecurityException("Role not permitted.");
     }
 
+    /** Stores a one-time message for the page opened after the redirect. */
     private void message(HttpServletRequest request, String message) {
         request.getSession().setAttribute("flash", message);
     }

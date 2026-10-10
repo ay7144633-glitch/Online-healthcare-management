@@ -18,7 +18,9 @@ import com.healthcare.model.AnalyticsPoint;
 import com.healthcare.model.Appointment;
 import com.healthcare.model.User;
 
+/** Reads and updates appointments, including booking rules and dashboard analytics. */
 public class AppointmentRepository {
+    /** Returns appointment counts for the latest six months, including months with no bookings. */
     public List<AnalyticsPoint> monthlyAnalytics() throws SQLException {
         YearMonth currentMonth = YearMonth.now();
         YearMonth firstMonth = currentMonth.minusMonths(5);
@@ -48,6 +50,7 @@ public class AppointmentRepository {
         return points;
     }
 
+    /** Lists appointments visible to the supplied user's role and account. */
     public List<Appointment> listFor(User user) throws SQLException {
         String scope = switch (user.role()) {
             case "PATIENT" -> " WHERE a.patient_id = ?";
@@ -75,6 +78,7 @@ public class AppointmentRepository {
         return appointments;
     }
 
+    /** Creates an appointment only when both accounts, availability, and clinician time are valid. */
     public void book(long patientId, long doctorId, LocalDateTime appointmentAt, String reason, int durationMinutes) throws SQLException {
         if (appointmentAt == null || !appointmentAt.isAfter(LocalDateTime.now())
                 || durationMinutes < 10 || durationMinutes > 180
@@ -87,6 +91,7 @@ public class AppointmentRepository {
                 + "AND EXISTS (SELECT 1 FROM users p WHERE p.id = ? AND p.role = 'PATIENT' AND p.active = TRUE) "
             // Require a published window and reject conflicting appointments for this clinician.
                 + "AND EXISTS (SELECT 1 FROM doctor_availability v WHERE v.doctor_id = d.id AND ? >= v.available_from AND ? <= v.available_to) "
+                // Strict inequalities allow appointments to touch at an endpoint without overlapping.
                 + "AND NOT EXISTS (SELECT 1 FROM appointments a WHERE a.doctor_id = d.id AND a.status <> 'CANCELLED' "
                 + "AND a.appointment_at < ? AND TIMESTAMPADD(MINUTE, a.duration_minutes, a.appointment_at) > ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -106,6 +111,7 @@ public class AppointmentRepository {
         }
     }
 
+    /** Changes an appointment status while limiting patient and doctor actions to their own appointments. */
     public void updateStatus(User actor, long appointmentId, String status) throws SQLException {
         if (!List.of("CONFIRMED", "COMPLETED", "CANCELLED").contains(status)) {
             throw new IllegalArgumentException("Choose a valid appointment status.");
@@ -131,6 +137,7 @@ public class AppointmentRepository {
         }
     }
 
+    /** Reschedules an appointment after checking ownership, status, availability, and time conflicts. */
     public void reschedule(User actor, long appointmentId, LocalDateTime appointmentAt) throws SQLException {
         if (!appointmentAt.isAfter(LocalDateTime.now())) {
             throw new IllegalArgumentException("Choose a future appointment time.");
@@ -147,6 +154,7 @@ public class AppointmentRepository {
                 long doctorId;
                 int duration;
                 String status;
+                // Lock this appointment while validating and changing its time so concurrent edits cannot overwrite each other.
                 String lookupSql = "SELECT doctor_id, duration_minutes, status FROM appointments WHERE id = ?" + scope + " FOR UPDATE";
                 try (PreparedStatement statement = connection.prepareStatement(lookupSql)) {
                     statement.setLong(1, appointmentId);

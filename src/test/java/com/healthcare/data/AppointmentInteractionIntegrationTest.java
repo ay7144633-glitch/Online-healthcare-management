@@ -21,6 +21,7 @@ import com.healthcare.model.Appointment;
 import com.healthcare.model.MedicalRecord;
 import com.healthcare.model.User;
 
+/** Exercises appointment, account, patient-history, and settings flows against MySQL. */
 @EnabledIfEnvironmentVariable(named = "DB_INTEGRATION_TESTS", matches = "true")
 class AppointmentInteractionIntegrationTest {
     private final UserRepository users = new UserRepository();
@@ -30,6 +31,7 @@ class AppointmentInteractionIntegrationTest {
     private final PatientHistoryRepository patientHistory = new PatientHistoryRepository();
     private final SettingRepository settings = new SettingRepository();
 
+    /** Verifies booking visibility, role actions, rescheduling conflicts, and linked records. */
     @Test
     void patientBookingAppearsForDoctorAndDoctorConfirmationAppearsForPatient() throws SQLException {
         String suffix = UUID.randomUUID().toString().replace("-", "");
@@ -142,6 +144,7 @@ class AppointmentInteractionIntegrationTest {
         }
     }
 
+    /** Verifies clinic settings persist through JDBC and restores the original values afterward. */
     @Test
     void clinicSettingsPersistAndRestoreThroughJdbc() throws SQLException {
         Database.initialize();
@@ -162,6 +165,7 @@ class AppointmentInteractionIntegrationTest {
         }
     }
 
+    /** Loads a test account by email and maps it to the user model. */
     private User findUser(String email) throws SQLException {
         String sql = "SELECT id, full_name, email, role, specialty, active FROM users WHERE email = ?";
         try (Connection connection = Database.getConnection();
@@ -178,11 +182,13 @@ class AppointmentInteractionIntegrationTest {
         }
     }
 
+    /** Updates a patient's account and returns the persisted display name. */
     private String updatePatientAccount(User patient, String email) throws SQLException {
         users.updateAccount(patient.id(), "Updated Integration Patient", email, "PATIENT", null);
         return findUser(email).fullName();
     }
 
+    /** Removes all database rows created by the integration workflow. */
     private void deleteTestData(String patientEmail, String doctorEmail, String deletableEmail,
             String deletableAdminEmail) throws SQLException {
         String[] emails = {patientEmail, doctorEmail, deletableEmail, deletableAdminEmail};
@@ -204,6 +210,7 @@ class AppointmentInteractionIntegrationTest {
         }
     }
 
+    /** Deletes rows whose patient or doctor ID belongs to one of the test accounts. */
     private void deleteByEmails(Connection connection, String prefix, String... emails) throws SQLException {
         String placeholders = String.join(", ", Arrays.stream(emails).map(email -> "?").toList());
         String sql = prefix + "(SELECT id FROM users WHERE email IN (" + placeholders + "))";

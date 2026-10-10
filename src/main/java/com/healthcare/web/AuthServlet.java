@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/** Serves sign-in and registration forms and manages authentication sessions. */
 @WebServlet(urlPatterns = {
         "/login",
         "/doctor/login",
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpSession;
 public class AuthServlet extends HttpServlet {
     private final UserRepository users = new UserRepository();
 
+    /** Displays the requested authentication form or ends the current session on logout. */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,6 +46,7 @@ public class AuthServlet extends HttpServlet {
         forwardToView(request, response, view);
     }
 
+    /** Registers a patient or authenticates a user, then routes them to their workspace. */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -86,12 +89,15 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
+    /** Stores the authenticated user after rotating the session ID. */
     private void signIn(HttpServletRequest request, User user) {
         HttpSession session = request.getSession(true);
+        // Rotate the session ID after authentication to prevent session fixation.
         request.changeSessionId();
         session.setAttribute("user", user);
     }
 
+    /** Re-displays the appropriate form with an authentication or registration error. */
     private void showError(HttpServletRequest request, HttpServletResponse response, boolean register,
             boolean doctorMode, boolean adminMode, String message)
             throws ServletException, IOException {
@@ -103,22 +109,26 @@ public class AuthServlet extends HttpServlet {
         forwardToView(request, response, view);
     }
 
+    /** Checks the required name, email, and password rules for patient registration. */
     private boolean isValidRegistration(String name, String email, String password) {
         return name.length() >= 2
                 && email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
                 && password.length() >= 8;
     }
 
+    /** Identifies the three paths that accept sign-in submissions. */
     private boolean isLoginPath(String path) {
         return path.equals("/login") || path.equals("/doctor/login") || path.equals("/admin/login");
     }
 
+    /** Confirms that the authenticated user's role matches the requested sign-in portal. */
     private boolean canUseLoginPortal(User user, boolean doctorPortal, boolean adminPortal) {
         return user != null
                 && (!doctorPortal || user.role().equals("DOCTOR"))
                 && (!adminPortal || user.role().equals("ADMIN"));
     }
 
+    /** Selects a sign-in error message that matches the portal being used. */
     private String loginErrorMessage(boolean doctorPortal, boolean adminPortal) {
         if (doctorPortal) {
             return "Doctor sign-in failed. Check your credentials and try again.";
@@ -129,6 +139,7 @@ public class AuthServlet extends HttpServlet {
         return "Email or password is incorrect, or this account is inactive.";
     }
 
+    /** Chooses the JSP view for the requested login portal. */
     private String loginView(boolean doctorMode, boolean adminMode) {
         if (doctorMode) {
             return "doctor-login";
@@ -139,11 +150,13 @@ public class AuthServlet extends HttpServlet {
         return "auth";
     }
 
+    /** Forwards the request to a JSP that is kept inside WEB-INF. */
     private void forwardToView(HttpServletRequest request, HttpServletResponse response, String view)
             throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/views/" + view + ".jsp").forward(request, response);
     }
 
+    /** Reads a trimmed request parameter, using an empty string when it is missing. */
     private String value(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
         return value == null ? "" : value.trim();

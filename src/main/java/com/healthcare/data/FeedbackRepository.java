@@ -10,7 +10,9 @@ import java.util.List;
 import com.healthcare.model.Feedback;
 import com.healthcare.model.User;
 
+/** Stores patient feedback and provides doctor rating summaries. */
 public class FeedbackRepository {
+    /** Saves a patient's rating and comments for a doctor. */
     public void add(User patient, long doctorId, int rating, String comments) throws SQLException {
         if (rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Choose a rating from 1 to 5.");
@@ -29,6 +31,7 @@ public class FeedbackRepository {
         }
     }
 
+    /** Returns the average feedback rating for a doctor. */
     public double averageFor(long doctorId) throws SQLException {
         String sql = "SELECT AVG(rating) AS average_rating FROM feedback WHERE doctor_id = ?";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -40,6 +43,7 @@ public class FeedbackRepository {
         }
     }
 
+    /** Returns the number of feedback entries for a doctor. */
     public long countFor(long doctorId) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM feedback WHERE doctor_id = ?")) {
@@ -51,6 +55,7 @@ public class FeedbackRepository {
         }
     }
 
+    /** Lists feedback entries for a doctor's workspace. */
     public List<Feedback> listForDoctor(long doctorId) throws SQLException {
         String sql = "SELECT p.full_name, f.rating, f.comments, f.created_at FROM feedback f "
                 + "JOIN users p ON p.id = f.patient_id WHERE f.doctor_id = ? ORDER BY f.created_at DESC LIMIT 5";

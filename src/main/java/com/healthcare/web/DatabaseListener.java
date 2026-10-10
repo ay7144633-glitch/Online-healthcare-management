@@ -9,8 +9,10 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
+/** Initializes the database schema and optionally creates the first administrator at startup. */
 @WebListener
 public class DatabaseListener implements ServletContextListener {
+    /** Creates missing tables and bootstraps an admin only when credentials are configured and absent. */
     @Override
     public void contextInitialized(ServletContextEvent event) {
         try {
@@ -21,6 +23,7 @@ public class DatabaseListener implements ServletContextListener {
                     && adminPassword != null && adminPassword.length() >= 8;
             if (hasBootstrapCredentials) {
                 UserRepository users = new UserRepository();
+                // Bootstrap only a missing account; restarting the app must never reset an existing admin password.
                 if (!users.existsByEmail(adminEmail)) {
                     users.createUser("System Administrator", adminEmail, adminPassword, "ADMIN", null);
                 }

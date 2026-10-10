@@ -17,7 +17,9 @@ import com.healthcare.model.AnalyticsPoint;
 import com.healthcare.model.User;
 import com.healthcare.util.PasswordService;
 
+/** Manages user accounts, authentication, patient profiles, and registration analytics. */
 public class UserRepository {
+    /** Returns user-registration counts for the latest six months, including empty months. */
     public List<AnalyticsPoint> monthlyRegistrationAnalytics() throws SQLException {
         YearMonth currentMonth = YearMonth.now();
         YearMonth firstMonth = currentMonth.minusMonths(5);
@@ -47,6 +49,7 @@ public class UserRepository {
         return points;
     }
 
+    /** Authenticates an active account by email and password, or returns null on failure. */
     public User authenticate(String email, String password) throws SQLException {
         String sql = "SELECT id, full_name, email, password_hash, role, specialty, active FROM users WHERE email = ? AND active = TRUE";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -60,10 +63,12 @@ public class UserRepository {
         return null;
     }
 
+    /** Creates a patient account through the standard user-creation path. */
     public void registerPatient(String fullName, String email, String password) throws SQLException {
         createUser(fullName, email, password, "PATIENT", null);
     }
 
+    /** Creates an account after normalizing its email and hashing its password. */
     public void createUser(String fullName, String email, String password, String role, String specialty) throws SQLException {
         String sql = "INSERT INTO users (full_name, email, password_hash, role, specialty) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -76,6 +81,7 @@ public class UserRepository {
         }
     }
 
+    /** Checks whether an account already uses the supplied email address. */
     public boolean existsByEmail(String email) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM users WHERE email = ?")) {
@@ -86,14 +92,17 @@ public class UserRepository {
         }
     }
 
+    /** Lists active doctor accounts for appointment booking and feedback forms. */
     public List<User> listDoctors() throws SQLException {
         return queryUsers("SELECT id, full_name, email, role, specialty, active FROM users WHERE role = 'DOCTOR' AND active = TRUE ORDER BY full_name");
     }
 
+    /** Lists active patient accounts for administrator scheduling. */
     public List<User> listPatients() throws SQLException {
         return queryUsers("SELECT id, full_name, email, role, specialty, active FROM users WHERE role = 'PATIENT' AND active = TRUE ORDER BY full_name");
     }
 
+    /** Finds an active account by its database ID, or returns null if none exists. */
     public User findById(long id) throws SQLException {
         String sql = "SELECT id, full_name, email, role, specialty, active FROM users WHERE id = ? AND active = TRUE";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -104,10 +113,12 @@ public class UserRepository {
         }
     }
 
+    /** Lists all accounts, including inactive accounts, for administrator management. */
     public List<User> listAll() throws SQLException {
         return queryUsers("SELECT id, full_name, email, role, specialty, active FROM users ORDER BY created_at DESC");
     }
 
+    /** Activates or deactivates a non-administrator account. */
     public void setActive(long id, boolean active) throws SQLException {
         try (Connection connection = Database.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE users SET active = ? WHERE id = ? AND role <> 'ADMIN'")) {
@@ -117,6 +128,7 @@ public class UserRepository {
         }
     }
 
+    /** Updates account details while preventing role changes that would orphan clinic history. */
     public void updateAccount(long id, String fullName, String email, String role, String specialty) throws SQLException {
         if (!List.of("ADMIN", "DOCTOR", "PATIENT").contains(role)) {
             throw new IllegalArgumentException("Choose a valid account role.");
@@ -132,6 +144,7 @@ public class UserRepository {
                     currentRole = results.getString("role");
                 }
             }
+            // Keep historical appointments and records tied to the role under which they were created.
             if (!currentRole.equals(role) && hasClinicHistory(connection, id)) {
                 throw new IllegalArgumentException("This account has linked clinic history, so its role cannot be changed.");
             }
@@ -150,8 +163,10 @@ public class UserRepository {
         }
     }
 
+    /** Deletes an account only when it has no linked clinic history. */
     public void deleteAccount(long id) throws SQLException {
         try (Connection connection = Database.getConnection()) {
+            // Preserve referenced clinic history; deactivation is the safe alternative for accounts with records.
             if (hasClinicHistory(connection, id)) {
                 throw new IllegalArgumentException("This account has linked clinic history. Deactivate it instead of deleting it.");
             }
@@ -164,6 +179,7 @@ public class UserRepository {
         }
     }
 
+    /** Updates the name and email on the specified patient's own profile. */
     public void updatePatientProfile(User user, String fullName, String email) throws SQLException {
         String sql = "UPDATE users SET full_name = ?, email = ? WHERE id = ? AND role = 'PATIENT'";
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -174,6 +190,7 @@ public class UserRepository {
         }
     }
 
+    /** Verifies the current password before storing a new hash for the patient. */
     public void changePatientPassword(User user, String currentPassword, String newPassword) throws SQLException {
         String storedHash;
         try (Connection connection = Database.getConnection();
@@ -199,6 +216,7 @@ public class UserRepository {
         }
     }
 
+    /** Executes an account query and maps every returned row to a user model. */
     private List<User> queryUsers(String sql) throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection connection = Database.getConnection();
@@ -211,6 +229,7 @@ public class UserRepository {
         return users;
     }
 
+    /** Checks whether appointments, availability, records, or feedback reference this account. */
     private boolean hasClinicHistory(Connection connection, long userId) throws SQLException {
         String sql = "SELECT EXISTS(SELECT 1 FROM appointments WHERE patient_id = ? OR doctor_id = ?) "
                 + "OR EXISTS(SELECT 1 FROM doctor_availability WHERE doctor_id = ?) "
@@ -227,6 +246,7 @@ public class UserRepository {
         }
     }
 
+    /** Converts the current database row into a user model. */
     private User mapUser(ResultSet results) throws SQLException {
         return new User(results.getLong("id"), results.getString("full_name"), results.getString("email"),
             results.getString("role"), results.getString("specialty"), results.getBoolean("active"));

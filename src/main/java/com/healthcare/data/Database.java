@@ -5,10 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
+/** Provides MySQL connections and creates the application's tables at startup. */
 public final class Database {
+    /** Prevents instances of this connection utility class. */
     private Database() {
     }
 
+    /** Opens a JDBC connection using the configured DB_* environment variables. */
     public static Connection getConnection() throws SQLException {
         String host = System.getenv().getOrDefault("DB_HOST", "localhost");
         String port = System.getenv().getOrDefault("DB_PORT", "3306");
@@ -20,6 +23,7 @@ public final class Database {
         return DriverManager.getConnection(url, user, password);
     }
 
+    /** Creates missing application tables without dropping or replacing existing data. */
     public static void initialize() throws SQLException {
         List<String> statements = List.of(
                 """
@@ -106,6 +110,7 @@ public final class Database {
                 """
         );
 
+        // CREATE TABLE IF NOT EXISTS makes startup safe to repeat without replacing existing data.
         try (Connection connection = getConnection(); var statement = connection.createStatement()) {
             for (String sql : statements) {
                 statement.executeUpdate(sql);

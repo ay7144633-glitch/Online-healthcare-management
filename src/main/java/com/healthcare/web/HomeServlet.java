@@ -12,10 +12,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/** Serves public-facing pages and supplies current clinic branding and contact settings. */
 @WebServlet(urlPatterns = {"", "/for-patients", "/for-doctors", "/for-clinics", "/how-it-works"})
 public class HomeServlet extends HttpServlet {
     private final SettingRepository settings = new SettingRepository();
 
+    /** Selects the requested public page, loads clinic settings, and forwards to its JSP. */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
